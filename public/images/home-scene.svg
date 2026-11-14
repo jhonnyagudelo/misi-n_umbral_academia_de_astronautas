@@ -8,7 +8,7 @@
   <g><use href="#star" x="121" y="189"/><use href="#star" x="355" y="74"/><use href="#star" x="677" y="100"/><use href="#star" x="909" y="185"/><use href="#star" x="820" y="63"/></g>
   <path d="m753 79-49 23" stroke="#e7e6ca" stroke-opacity=".2" stroke-linecap="round"/><path d="m753 79-17 8" stroke="#e7e6ca" stroke-width="2" stroke-linecap="round"/>
   <g transform="translate(215 167) rotate(-22)"><ellipse rx="73" ry="18" stroke="#aabdc1" stroke-width="2"/><circle r="34" fill="#ce9a69"/><path d="M-31-13c18 10 44 10 62 0M-33 3c21 12 45 10 66 0M-26 21c16 6 35 6 52 0" stroke="#e3b37e" stroke-width="7"/><path d="M-72 0c0 10 32 18 72 18s72-8 72-18" stroke="#b6cccb" stroke-width="3"/></g>
-  <circle cx="794" cy="116" r="42" fill="#75aaa8"/><path d="M773 80c18 10 4 18 14 27s32 4 38 22M762 131c11-4 16 4 20 20" stroke="#b6d1be" stroke-width="10" stroke-linecap="round"/><path d="M810 77a42 42 0 0 1-24 80 42 42 0 0 0 24-80Z" fill="#294f60" opacity=".35"/>
+
   <circle cx="365" cy="189" r="10" fill="#c9d1be"/><circle cx="362" cy="186" r="3" fill="#a4b2a9"/>
   <path d="M0 335c122-38 233-24 338-22 126 3 180-29 311-16 135 13 225 3 351 28v75H0Z" fill="#a2b6bc"/>
   <path d="M0 335c122-38 233-24 338-22 126 3 180-29 311-16 135 13 225 3 351 28" stroke="#dce1ce" stroke-width="2"/>
