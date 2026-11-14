@@ -1,0 +1,52 @@
+{
+  "estado": "PENDIENTE",
+  "instrucciones": "Completar enlace y fecha de consulta de cada fuente antes de la entrega. La columna tipo separa lo que sostiene NASA de lo que es regla del juego.",
+  "consultado": null,
+  "fuentes": [
+    {
+      "id": 1,
+      "tema": "AVATAR (Artemis II): células de médula ósea como modelos de tejido",
+      "organizacion": "NASA Science",
+      "titulo": "Artemis II AVATAR",
+      "enlace": null,
+      "tipo": "Fuente NASA",
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": 2,
+      "tema": "Nave Orion y uso de refugios y materiales frente a radiación",
+      "organizacion": "NASA",
+      "titulo": "Meet NASA's Orion Spacecraft",
+      "enlace": null,
+      "tipo": "Fuente NASA",
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": 3,
+      "tema": "Clima espacial: datos y acceso al servicio DONKI",
+      "organizacion": "NASA CCMC",
+      "titulo": "DONKI",
+      "enlace": null,
+      "tipo": "Fuente NASA",
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": 4,
+      "tema": "Oxígeno a partir de dióxido de carbono marciano (referencia de control: no se usa en la base lunar)",
+      "organizacion": "NASA",
+      "titulo": "Mars Oxygen In-Situ Resource Utilization Experiment (MOXIE)",
+      "enlace": null,
+      "tipo": "Fuente NASA",
+      "estado": "PENDIENTE"
+    },
+    {
+      "id": 5,
+      "tema": "Reservas de aire, agua y confort térmico; tiempos de refugio; duración de la operación",
+      "organizacion": "Misión Umbral",
+      "titulo": "Reglas de la primera versión (documento de dirección §03)",
+      "enlace": null,
+      "tipo": "Regla del juego",
+      "estado": "DEFINIDO"
+    }
+  ]
+}

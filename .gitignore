@@ -1,0 +1,32 @@
+# Dependencias
+node_modules/
+
+# Compilación de Astro
+dist/
+.astro/
+
+# Entornos y claves (la API de NASA va en .env local, nunca en el repositorio)
+.env
+.env.*
+!.env.example
+
+# Hosting
+.vercel/
+.netlify/
+
+# Pruebas
+coverage/
+
+# Registros
+*.log
+npm-debug.log*
+
+# Sistema y editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Metadatos de herramientas locales
+.atl/

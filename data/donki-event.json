@@ -1,0 +1,12 @@
+{
+  "estado": "PENDIENTE",
+  "instrucciones": "Elegir UN evento histórico de DONKI (NASA CCMC) y completar los campos desde la fuente. No inventar valores: si algo no se puede verificar en la fuente, queda null. Con la ficha completa, guardar también una copia local del JSON original de la API para jugar sin conexión.",
+  "etiqueta": "Fuente NASA · evento histórico de clima espacial. Nunca presentarlo como alerta actual.",
+  "tipo": null,
+  "identificador": null,
+  "fecha": null,
+  "enlace": null,
+  "fechaConsulta": null,
+  "resumen": null,
+  "copiaLocal": null
+}
