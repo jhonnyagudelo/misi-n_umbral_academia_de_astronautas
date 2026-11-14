@@ -50,6 +50,8 @@ export interface ShelterState {
 }
 
 export interface GameState {
+  /** Additional campaign objectives; absent preserves the original engine behavior. */
+  missionGoals?: { recycler: boolean; relay: boolean };
   rulesVersion: string;
   phase: Phase;
   /** Tiempo activo de la operación en la base. Congelado al pausar. */

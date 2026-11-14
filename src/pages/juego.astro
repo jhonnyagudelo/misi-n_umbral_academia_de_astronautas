@@ -1,5 +1,10 @@
 ---
 import "../styles/global.css";
+import "../styles/pixel-ui.css";
+import "../styles/mission.css";
+import "../styles/playground.css";
+import "../styles/space-scene.css";
+import GameRoot from "../components/GameRoot";
 ---
 
 <!doctype html>
@@ -7,15 +12,13 @@ import "../styles/global.css";
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Base lunar | Misión Umbral</title>
+    <meta name="description" content="Prepara tu traje, elige tu nave y rescata una base lunar en un entrenamiento educativo de decisiones y recursos." />
+    <link rel="preload" href="/fonts/pixelify-sans.ttf" as="font" type="font/ttf" crossorigin />
+    <title>Tu misión | Misión Umbral</title>
   </head>
 
-  <body class="bg-space-900 text-space-100 min-h-dvh font-sans">
-    <main class="mx-auto max-w-4xl px-6 py-12">
-      <h1 class="text-3xl font-bold">Bienvenido a la base lunar</h1>
-      <p class="mt-4">
-        Tu misión será mantener los sistemas de la base funcionando.
-      </p>
-    </main>
+  <body class="mission-body">
+    <main><GameRoot client:load /></main>
+    <noscript>Este entrenamiento necesita JavaScript para mover tarjetas y calcular recursos. Actívalo para jugar. <a href="/">Volver a la portada</a>.</noscript>
   </body>
 </html>

@@ -116,8 +116,8 @@ export function objectives(state: GameState) {
     transmitted,
     solar,
     failure,
-    tasks: harvest && avatar && transmitted,
-    all: harvest && avatar && transmitted && solar && failure
+    tasks: harvest && avatar && transmitted && (!state.missionGoals || (state.missionGoals.recycler && state.missionGoals.relay)),
+    all: harvest && avatar && transmitted && solar && failure && (!state.missionGoals || (state.missionGoals.recycler && state.missionGoals.relay))
   };
 }
 

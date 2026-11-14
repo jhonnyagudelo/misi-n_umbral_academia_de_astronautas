@@ -2,11 +2,33 @@
 
 Entrenador de misión web para niños y niñas de 7 a 12 años. El jugador prepara una misión, aprende con AVATAR y mantiene una base lunar con decisiones de recursos limitados.
 
-## Vista previa de la portada
+## Juego en línea
 
 [Abrir Misión Umbral en el navegador](https://mision-umbral-academia.jfelipevv-2005.chatgpt.site)
 
-Enlace público para revisar la portada desde otros equipos, sin instalar el proyecto. Publicado el 14 de noviembre de 2026 desde la rama `felipe/escena-base`. La portada se adapta a la pantalla; **el juego todavía está en construcción** y «Juega ya» abre su pantalla básica. Esta vista previa es una copia publicada: los cambios futuros en GitHub requieren volver a publicarla.
+La versión pública 11, publicada el 14/11/2026, incluye el prototipo con escena interactiva, movimiento del astronauta y decisiones al acercarse. [Jugar directamente](https://mision-umbral-academia.jfelipevv-2005.chatgpt.site/juego), sin instalar nada. Esta publicación es una copia estática: los cambios posteriores requieren volver a publicarla; GitHub no la actualiza automáticamente.
+
+Puedes volver al objeto **Traje** para cambiar las tres mejoras aceptadas antes de despegar. La nave, carga y refugio se conservan; confirma otra vez con «¡Traje listo!».
+
+## Fluidez y despegue — actualización posterior del 14/11/2026
+
+Mantener flechas o A/D para caminar; soltar detiene al astronauta. También hay flechas táctiles mantenidas y clic para acercarse. El movimiento se sincroniza con el navegador, sin destinos acumulados por repetición de teclas. La nueva paleta diferencia hangar, estaciones y cabina. Un despegue ilustrado de 9,6 segundos muestra ascenso, separación y cápsula/módulo de servicio, seguido de la vista espacial de la Tierra; es tiempo educativo abreviado. Pausa y preferencia de movimiento reducido respetadas.
+
+Verificación local: 50 pruebas, tipos/build y QA de teclado, táctil, foco, pausa, ambas naves y seis tamaños del recorrido anterior. qa-flight-motion.mjs añade pruebas de movimiento y lanzamiento. Medición local: 72 actualizaciones/1,2 s y deriva cero al soltar. Pendiente rendimiento en dispositivos físicos y comprensión con niños.
+
+## Prototipo jugable — 14/11/2026
+
+**Interfaz vigente:** escena a pantalla completa. Tocar el suelo o usar flechas/A-D para caminar; acercarse a objetos y usar E para decidir. Traje y nave se preparan en el mismo hangar con ventanas breves. En la base, recoger una batería del estante, caminar a una estación y conectarla. Un objetivo visible; detalles opcionales. Verificación actual: 50 pruebas; QA de esta presentación en `scripts/qa-playground.mjs`. El script `qa-campaign.mjs` conserva la verificación histórica de las pantallas anteriores y ya no es el recorrido de interfaz vigente.
+
+Ejecutar `npm.cmd run dev` y abrir [el juego local](http://localhost:4321/juego). Conserva la portada y añade transmisión de auxilio, reclutamiento, elección de tres mejoras por arrastre/teclado/táctil, Apollo difícil/Orion normal, carga, refugio, lanzamiento, viaje, base, salidas, AVATAR, emergencias, fracaso/reintento y cierre educativo.
+
+Las seis mejoras originales cambian autonomía, acceso, energía o trabajo. Se documentan los prototipos y principios reales; cifras y tiempos son reglas educativas. Laboratorio de mantenimiento lunar para cambiar equipo y recargar. Guardado local versionado en puntos seguros, sin cuentas ni sincronización. Pausa, explicaciones y pestaña oculta detienen el reloj. La voz es opcional y depende de las voces del navegador.
+
+Un estado de campaña en `src/game/campaign.ts` contiene el motor original; React solo presenta y envía acciones. `campaign-store.ts` conserva ese estado y gestiona pausa/guardado; no se ejecuta un segundo reloj del store antiguo. La escena actual usa React/CSS; las reglas siguen independientes de la presentación. No se añadieron dependencias.
+
+Verificación actual: 50 pruebas, compilación y TypeScript correctos; scripts/qa-playground.mjs verifica el recorrido de la nueva interfaz, baterías, pausa y refugio en seis tamaños sin desplazamiento de página ni excepciones. Evidencias locales en Temp/umbral-playground-qa. El QA anterior queda como antecedente. Fuentes y licencias disponibles en el menú Fuentes.
+
+Apollo incluye una comprobación secuencial de tres palancas y Orion un panel de diagnóstico, identificados como procedimientos simplificados del entrenamiento. Pendientes: equilibrio con niños, arte final, detalle de lanzamiento/descenso y registro histórico DONKI. El prototipo usa una alerta didáctica y declara que no es una predicción real. Prototipo publicado en el enlace anterior, versión 11. Sin push ni merge al repositorio GitHub en esta entrega.
 
 **NASA Space Apps Challenge** · Reto: *Build a Junior Astronaut Mission Trainer*
 Documento de dirección: [`Direccion del juego - Mision Umbral - Revision Jonny.pdf`](./Direccion%20del%20juego%20-%20Mision%20Umbral%20-%20Revision%20Jonny.pdf)
@@ -78,7 +100,7 @@ npm run preview  # sirve la compilación para revisarla
 
 Stack instalado: Astro 7, React 19, Phaser 4, Tailwind CSS 4 y Vitest 5.
 
-**PENDIENTE:** agregar la URL jugable publicada cuando esté desplegada.
+**URL jugable:** https://mision-umbral-academia.jfelipevv-2005.chatgpt.site/juego
 
 ### Arquitectura por capas
 
@@ -217,7 +239,7 @@ La implementación de la portada adaptable y su ilustración vectorial espacial 
 
 ### Condiciones gráficas vigentes
 
-La primera entrega usa pixel art cartoon espacial sencillo: contornos oscuros, píxeles visibles, traje dorado, fondo azul grisáceo y acentos cian, con paleta corta y sombras por bloques. La portada usa PNG nativos transparentes con el doble de resolución de dibujo, conservando su tamaño visible y sin suavizado. El cohete rojo conserva la perspectiva hacia el planeta y se orienta sobre una cuadrícula de píxeles. Se parte de imágenes estáticas; caminar, partículas y otros ciclos son opcionales. No se exige rigging, Spine ni Live2D. Los recursos de la base y la escena jugable continúan pendientes. Ver [condiciones de arte y animación](docs/Condiciones%20de%20arte%20y%20animacion%20-%20Mision%20Umbral.md).
+La primera entrega usa pixel art cartoon espacial sencillo: contornos oscuros, píxeles visibles, traje dorado, fondo azul grisáceo y acentos cian, con paleta corta y sombras por bloques. La portada usa PNG nativos transparentes con el doble de resolución de dibujo, conservando su tamaño visible y sin suavizado. El cohete rojo conserva la perspectiva hacia el planeta y se orienta sobre una cuadrícula de píxeles. Se parte de imágenes estáticas; caminar, partículas y otros ciclos son opcionales. No se exige rigging, Spine ni Live2D. La escena y los recursos de interfaz del prototipo están integrados; su arte final y revisión con jugadores siguen pendientes. Ver [condiciones de arte y animación](docs/Condiciones%20de%20arte%20y%20animacion%20-%20Mision%20Umbral.md).
 
 ## Licencia y créditos
 
@@ -229,4 +251,4 @@ Proyecto educativo independiente para el NASA Space Apps Challenge. No es un pro
 
 Los editables vectoriales y los PNG de la portada se reproducen con `node scripts/create-home-pixel-art.mjs`. Los sprites usan bases de 64 × 80 (guía), 128 × 80 (cohete) y 64 × 64 (planeta); el fondo es de 768 × 432. La ilustración y el código de generación se prepararon con asistencia de IA, sin reutilizar elementos gráficos de las referencias.
 
-La interfaz del home usa **Pixelify Sans**, de The Pixelify Sans Project Authors, distribuida bajo [SIL Open Font License 1.1](public/fonts/OFL-Pixelify-Sans.txt). Copia local obtenida de [Google Fonts](https://github.com/google/fonts/tree/main/ofl/pixelifysans); carga independiente de servicios externos. El título, diálogo y controles usan esta fuente; la franja institucional conserva tipografía convencional. Los marcos pixelados reutilizables están en src/styles/pixel-ui.css. Adaptación verificada para el home; la interfaz jugable sigue pendiente.
+La interfaz usa **Pixelify Sans**, de The Pixelify Sans Project Authors, distribuida bajo [SIL Open Font License 1.1](public/fonts/OFL-Pixelify-Sans.txt). Copia local obtenida de [Google Fonts](https://github.com/google/fonts/tree/main/ofl/pixelifysans); carga independiente de servicios externos. Títulos, diálogos y controles usan esta fuente; información formal y fuentes conservan tipografía convencional. Marcos reutilizables en src/styles/pixel-ui.css y presentación jugable en src/styles/mission.css. Los nuevos iconos y dibujos de cuadrícula se realizaron con asistencia de IA mediante código, sin copiar gráficos de las referencias. La estática es generada y la narración opcional utiliza las voces disponibles del navegador.

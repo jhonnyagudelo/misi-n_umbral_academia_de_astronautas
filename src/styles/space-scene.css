@@ -1,0 +1,101 @@
+/* Richer materials and distinct locations; static scenery keeps the animation cheap. */
+.pg-app .mission-header{background:#292536;border-color:#756579;}
+.pg-mission{background:#3d394b;border-color:#7d7386;}
+.pg-hud{background:#272b38;}.pg-place{color:#dcc9a8;}
+.pg-field{background:#a9a49a;}
+.pg-hangar{background:linear-gradient(90deg,#bfae94 0 12%,#ded1b7 12% 88%,#bfae94 88%);}
+.pg-hangar .pg-window{background:linear-gradient(#80c8d2 0 62%,#9aaf78 62% 80%,#738e63 80%);border-color:#7b746a;box-shadow:0 0 0 4px #504a4b;}
+.pg-hangar .pg-planet{display:none;}
+.pg-day-clouds{position:absolute;left:5%;top:23%;width:55%;height:9%;background:#f9edd4;box-shadow:28px -7px #f9edd4,90px 12px #f9edd4;opacity:.9;}
+.pg-light{background:#f8d58a;box-shadow:0 12px #776b67;}
+.pg-floor{background:repeating-linear-gradient(90deg,transparent 0 99px,#8c8584 99px 102px),#b2aaa0;border-color:#e7d4a7;box-shadow:inset 0 14px #918e8c;}
+.pg-hangar .pg-floor{background:repeating-linear-gradient(115deg,transparent 0 56px,#d9b75d 57px 70px,transparent 71px 130px),#7c8580;border-color:#e8c46f;}
+.pg-suit-display{background:#c9ae76;padding:12px 22px;border:4px solid #8c775b;box-shadow:8px 8px #655c55;}
+.pg-object{background:#383847;color:#fff2db;border-color:var(--object-color,#baa17d);border-top-width:8px;box-shadow:0 6px #514c51;}
+.pg-object>i{color:#dad4d5;}.pg-object:hover,.pg-target{background:#514453;border-color:#fff0b0;box-shadow:0 6px #514c51,0 0 0 2px #f6d37d;}
+.pg-powered{background:#324a40;}.pg-powered>i{color:#c8efac;}
+.pg-base{background:linear-gradient(90deg,#928888 0 12%,#beb4a1 12% 88%,#928888 88%);}
+.pg-base .pg-window{background:#070b19;border-color:#756970;box-shadow:0 0 0 4px #4a414e;}
+.pg-base .pg-window .pg-planet{background:#b8c0bf;box-shadow:inset -20px -8px #78808c;}
+.pg-flight{background:#aeaca3;}
+.pg-flight .pg-window{left:5%;top:3%;width:90%;height:64%;border:12px solid #4b4857;box-shadow:0 0 0 4px #d6cbb5;background:#040713;border-radius:24% 24% 8% 8%;}
+.pg-flight .pg-floor{background:repeating-linear-gradient(90deg,transparent 0 99px,#86818c 99px 102px),#b1a79e;border-color:#e2c69b;}
+.pg-flight .pg-object{bottom:25%;background:#423f50;}
+.pg-outside{background:#080c1b;}.pg-outside .pg-floor{background:repeating-linear-gradient(170deg,transparent 0 26px,#8d8581 27px 30px,transparent 31px 90px),#aba196;box-shadow:inset 0 18px #766e72;border-color:#c7bba6;}
+.pg-outside .pg-window{inset:0;width:100%;height:70%;}
+.pg-bottom{background:#34303f;border-color:#7b6b78;}.pg-buddy>p{color:#f0dfc7;}
+.pg-movement button{background:#5d5265;border-color:#ac94ad;color:#fff0d4;touch-action:none;}
+.pg-movement .pg-use{background:#e8bd71;color:#302a35;border-color:#fce1a9;}
+.pg-panel{background:#343042;border-color:#c6a3bb;}.pg-panel>header{background:#554357;}
+.pg-panel header button{background:#3c3345;border-color:#c4a3bc;}
+.pg-upgrades button{background:#42394b;border-color:#927b96;}
+.pg-upgrades button:nth-child(2){background:#344b57;}.pg-upgrades button:nth-child(3){background:#695332;}.pg-upgrades button:nth-child(4){background:#65433f;}.pg-upgrades button:nth-child(5){background:#514368;}.pg-upgrades button:nth-child(6){background:#39594b;}
+.pg-upgrade-slots button{background:#4c4557;}.pg-item-info{background:#262434;}
+.pg-ship-choices>button{background:#413b4c;border-color:#a78ca8;}.pg-ship-choices>button:first-child{background:#59433b;}
+.pg-selected{background:#67513e!important;border-color:#ffe1a0!important;}
+.pg-player-track{position:absolute;inset:0;z-index:5;pointer-events:none;will-change:transform;}
+.pg-player{left:0;}.pg-player>span{text-shadow:1px 2px #302538;}
+.pg-movement button:focus-visible,.pg-object:focus-visible{outline:3px dashed #fff0b0;outline-offset:4px;}
+
+/* The view outside is a black sky, one sunlit Earth, and a distant Moon. */
+.space-view{position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse at 80% 0,#20223c 0,#060a18 48%,#02050e 100%);}
+.space-stars{position:absolute;inset:0;width:100%;height:100%;}
+.space-earth{position:absolute;width:clamp(130px,30%,320px);height:auto;left:8%;top:5%;}
+.space-moon{position:absolute;right:12%;top:18%;width:46px;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#8d8b88 0 8%,transparent 9%),radial-gradient(circle at 61% 63%,#9a9590 0 13%,transparent 14%),#d3cbb7;box-shadow:inset -12px -8px #76798a;}
+.space-location{position:absolute;left:5%;bottom:12%;font-size:12px;letter-spacing:2px;color:#e6d1a7;}
+.space-leg-3 .space-earth{width:80px;left:8%;top:10%;}.space-leg-3 .space-moon{width:clamp(95px,23%,220px);top:5%;}
+.pg-outside .space-earth,.pg-base .space-earth{width:95px;left:14%;top:12%;}.pg-outside .space-moon,.pg-outside .space-location,.pg-base .space-moon,.pg-base .space-location{display:none;}
+
+/* Only transforms/opacity animate. No blur, animated layout, or star warp. */
+.pg-launch>.launch-scene{position:absolute;inset:0;overflow:hidden;background:#060a18;height:100%;margin:0;border:0;}
+.launch-scene .space-view{z-index:0;}
+.launch-sky{position:absolute;inset:0;z-index:1;background:linear-gradient(#5cb5ce,#a6d8cf 60%,#f4c995);}
+.launch-ground{position:absolute;inset:0;z-index:2;animation:ground-away 3.2s ease-in forwards;}
+.launch-hills{position:absolute;bottom:0;left:-10%;width:120%;height:31%;background:#64876c;clip-path:polygon(0 40%,15% 5%,37% 53%,58% 9%,79% 35%,100% 0,100% 100%,0 100%);}
+.launch-pad{position:absolute;bottom:0;left:0;right:0;height:15%;border-top:8px solid #e7be74;background:repeating-linear-gradient(110deg,#6c7479 0 52px,#c3ad67 53px 65px);}
+.launch-tower{position:absolute;width:7%;height:65%;bottom:14%;left:34%;background:repeating-linear-gradient(45deg,transparent 0 22px,#ad6751 23px 30px,transparent 31px 50px);border:8px solid #965444;box-shadow:5px 0 #593f40;}
+.launch-tower i{position:absolute;left:0;width:190%;height:8px;top:25%;background:#b57455;}.launch-tower i:nth-child(2){top:50%;}.launch-tower i:nth-child(3){top:75%;}
+.launch-vehicle{position:absolute;z-index:4;left:50%;top:7%;width:clamp(110px,15vw,205px);height:79%;transform:translate3d(-50%,0,0);animation:lift-off 3.2s cubic-bezier(.4,0,.6,1) both;will-change:transform;}
+.launch-rocket,.launch-vehicle .space-craft{width:100%;height:100%;overflow:visible;}
+.launch-exhaust{transform-origin:90px 324px;animation:engine-burn .32s ease-in-out infinite alternate;}
+.launch-cloud{position:absolute;z-index:3;width:24%;height:9%;border-radius:30px;background:#fff3dc;opacity:.85;box-shadow:25px -20px #fff3dc,-25px 15px #fff3dc;animation:cloud-away 3.2s ease-in forwards;}
+.cloud-one{top:14%;left:6%;}.cloud-two{top:40%;right:6%;}
+.launch-smoke{position:absolute;z-index:3;left:35%;right:auto;bottom:0;width:30%;height:22%;background:none;box-shadow:none;animation:smoke-away 3.2s ease-out forwards;}
+.launch-smoke i{position:absolute;width:45%;height:70%;border-radius:50%;background:#f2dfbb;box-shadow:20px -10px #d8cfb7;}.launch-smoke i:nth-child(2){left:35%;top:15%;}.launch-smoke i:nth-child(3){left:-30%;top:35%;}.launch-smoke i:nth-child(4){left:75%;top:35%;}
+.launch-caption{position:absolute;z-index:6;left:4%;top:10%;width:29%;max-width:380px;padding:13px 20px;background:#272635ee;border:2px solid #d8b986;text-align:center;display:flex;flex-direction:column;gap:5px;}
+.launch-caption small{font-size:12px;letter-spacing:2px;color:#edbb80;}.launch-caption strong{font-size:clamp(22px,2.5vw,30px);color:#fff0c8;}.launch-caption>span{font-size:18px;color:#e5ded7;}
+.launch-note{position:absolute;bottom:2%;left:0;right:0;text-align:center;z-index:6;color:#e9d9c8;font-size:12px;text-shadow:1px 1px #161326;}
+.launch-step-0 .launch-sky{animation:none;}
+.launch-step-0 .space-earth{width:130%;left:-15%;top:62%;}
+.launch-step-1 .launch-sky{background:linear-gradient(#0a0d20,#173f60 62%,#72b7c5);animation:sky-away 3.2s linear forwards;}
+.launch-step-1 .launch-ground,.launch-step-1 .launch-smoke,.launch-step-1 .launch-cloud,.launch-step-2 .launch-ground,.launch-step-2 .launch-smoke,.launch-step-2 .launch-cloud,.launch-step-2 .launch-sky{display:none;}
+.launch-step-1 .space-earth{width:110%;left:-5%;top:48%;animation:earth-away 3.2s ease-out both;}
+.launch-step-1 .launch-vehicle{height:65%;top:1%;animation:upper-ascent 3.2s ease-out both;}
+.launch-step-1 .booster-left{transform-origin:45px 220px;animation:booster-left 2s ease-in forwards;}
+.launch-step-1 .booster-right{transform-origin:135px 220px;animation:booster-right 2s ease-in forwards;}
+.launch-step-1 .rocket-apollo .launch-core{animation:stage-away 3.2s ease-in forwards;}
+.launch-step-1 .rocket-apollo .launch-exhaust{animation:stage-away 3.2s ease-in forwards;}
+.launch-step-2 .space-earth{width:42%;left:-4%;top:28%;}
+.launch-step-2 .launch-vehicle{width:clamp(140px,24%,300px);height:60%;top:4%;left:55%;animation:capsule-coast 3.2s ease-out both;}
+.launch-spent-stage{position:absolute;left:51%;top:40%;width:34px;height:120px;background:#bf936d;border:5px solid #e2d4b9;animation:spent-away 3.2s ease-in forwards;z-index:2;}
+.launch-paused *{animation-play-state:paused!important;}
+.launch-note{width:max-content;max-width:96%;margin:auto;padding:2px 7px;background:#262434d9;}
+@media(max-width:650px){.launch-caption{left:3%;top:auto;bottom:7%;width:94%;max-width:none;}}
+@media(max-height:500px) and (min-width:500px){.launch-caption{left:3%;top:10%;bottom:auto;width:32%;}}
+@media(max-height:500px){.launch-step-0 .launch-vehicle{height:80%;top:3%;}}
+@keyframes lift-off{0%,12%{transform:translate3d(-50%,7%,0);}100%{transform:translate3d(-50%,-31%,0);}}
+@keyframes ground-away{0%,15%{transform:translateY(0);}100%{transform:translateY(75%);}}
+@keyframes cloud-away{to{transform:translateY(250%);opacity:0;}}
+@keyframes smoke-away{0%{transform:scale(.5);opacity:0;}25%{opacity:1;}100%{transform:translateY(100%) scale(2);opacity:0;}}
+@keyframes sky-away{0%,20%{opacity:1;}100%{opacity:0;}}
+@keyframes engine-burn{to{transform:scaleY(.9);}}
+@keyframes upper-ascent{from{transform:translate3d(-50%,5%,0) rotate(0);}to{transform:translate3d(-25%,-8%,0) rotate(18deg);}}
+@keyframes earth-away{to{transform:translate(-10%,10%) scale(.85);}}
+@keyframes booster-left{to{transform:translate(-45px,105px) rotate(-18deg);opacity:0;}}
+@keyframes booster-right{to{transform:translate(45px,105px) rotate(18deg);opacity:0;}}
+@keyframes stage-away{20%{transform:translateY(0);opacity:1;}100%{transform:translateY(170px);opacity:0;}}
+@keyframes capsule-coast{from{transform:translate3d(-50%,8%,0) rotate(25deg);}to{transform:translate3d(-20%,-6%,0) rotate(32deg);}}
+@keyframes spent-away{from{transform:rotate(12deg);opacity:1;}to{transform:translate(-100px,160px) rotate(-24deg);opacity:0;}}
+@media(max-width:650px){.pg-suit-display{padding:8px 14px;}.pg-flight .pg-window{border-width:7px;}.space-earth{width:53%;left:3%;top:12%;}.space-moon{right:8%;width:28px;}.space-location{font-size:9px;letter-spacing:1px;bottom:9%;}.launch-vehicle{width:30%;top:5%;height:77%;}.launch-caption{padding:10px 12px;bottom:9%;}.launch-caption>span{font-size:15px;}.launch-caption small{font-size:10px;letter-spacing:1px;}.launch-tower{left:24%;width:12%;}.launch-note{font-size:10px;}.launch-step-2 .space-earth{width:90%;left:-30%;top:27%;}.launch-step-2 .launch-vehicle{width:43%;left:63%;top:8%;}}
+@media(max-height:500px){.launch-caption{padding:6px 12px;bottom:10%;}.launch-caption strong{font-size:21px;}.launch-caption>span{display:none;}.launch-caption small{font-size:9px;}.launch-vehicle{width:100px;height:94%;top:-7%;}.launch-step-1 .launch-vehicle{height:80%;}.launch-step-2 .launch-vehicle{width:160px;height:80%;top:-10%;}.space-earth{max-height:88%;width:auto;}.space-location{font-size:9px;bottom:9%;}.launch-note{font-size:9px;}}
+@media(prefers-reduced-motion:reduce){.launch-scene *{animation:none!important;}.launch-step-0 .launch-vehicle{transform:translate(-50%,-6%);}.launch-step-1 .launch-vehicle{transform:translate(-50%,-12%) rotate(18deg);}.launch-step-1 .booster-left{transform:translate(-35px,50px) rotate(-15deg);}.launch-step-1 .booster-right{transform:translate(35px,50px) rotate(15deg);}.launch-step-2 .launch-vehicle{transform:translate(-30%,-5%) rotate(28deg);}.launch-step-1 .launch-sky,.launch-smoke,.launch-spent-stage{display:none;}}
