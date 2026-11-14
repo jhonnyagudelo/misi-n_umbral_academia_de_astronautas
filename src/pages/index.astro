@@ -13,9 +13,9 @@ import '../styles/global.css';
   </head>
   <body>
     <div class="mission-scene" aria-hidden="true">
-      <img src="/images/home-scene.png" width="384" height="216" alt="" fetchpriority="high" />
-      <img class="destination-planet" src="/images/planeta-destino.png" width="32" height="32" alt="" />
-      <canvas class="flying-rocket" width="96" height="96"><img src="/images/cohete.png" alt="" /></canvas>
+      <img src="/images/home-scene.png" width="768" height="432" alt="" fetchpriority="high" />
+      <img class="destination-planet" src="/images/planeta-destino.png" width="64" height="64" alt="" />
+      <canvas class="flying-rocket" width="192" height="192"><img src="/images/cohete.png" alt="" /></canvas>
     </div>
     <main class="academy">
       <header class="masthead" aria-label="Misión Umbral">
@@ -32,7 +32,7 @@ import '../styles/global.css';
         <div class="scene-space" aria-hidden="true"></div>
         <div class="invitation">
           <section class="astronaut-dialogue" aria-label="Bienvenida del astronauta">
-            <img class="astronaut-guide" src="/images/astronauta-guia.png" width="32" height="40" alt="El astronauta guía te saluda." />
+            <img class="astronaut-guide" src="/images/astronauta-guia.png" width="64" height="80" alt="El astronauta guía te saluda." />
             <div class="speech-bubble">
               <p class="speaker">TU GUÍA ASTRONAUTA</p>
               <h2>Pequeñas decisiones. <span>Grandes misiones.</span></h2>
@@ -66,12 +66,12 @@ import '../styles/global.css';
       rocket.style.setProperty('--flight-heading', `${heading * 180 / Math.PI}deg`);
       if (context && sprite.complete && sprite.naturalWidth > 0) {
         // Rotate on the source pixel grid, then enlarge the canvas without smoothing.
-        context.clearRect(0, 0, 96, 96);
+        context.clearRect(0, 0, rocket.width, rocket.height);
         context.imageSmoothingEnabled = false;
         context.save();
-        context.translate(48, 48);
+        context.translate(rocket.width / 2, rocket.height / 2);
         context.rotate(heading);
-        context.drawImage(sprite, -32, -20);
+        context.drawImage(sprite, -sprite.naturalWidth / 2, -sprite.naturalHeight / 2);
         context.restore();
         rocket.dataset.ready = 'true';
       }

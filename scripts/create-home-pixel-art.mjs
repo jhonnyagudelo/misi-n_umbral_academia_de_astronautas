@@ -13,6 +13,16 @@ function surface(w,h) {
   const ellipse=(cx,cy,rx,ry,color,stroke)=>{for(let y=Math.floor(cy-ry);y<=cy+ry;y++)for(let x=Math.floor(cx-rx);x<=cx+rx;x++){const d=((x-cx)/rx)**2+((y-cy)/ry)**2;if(d<=1)dot(x,y,stroke&&((x-cx)/Math.max(1,rx-1))**2+((y-cy)/Math.max(1,ry-1))**2>1?stroke:color);}};
   return {w,h,cells,dot,rect,line,polygon,ellipse};
 }
+// Rasterize geometry on a finer grid; outlines stay one source pixel wide.
+function fineSurface(w,h) {
+  const s=surface(w*2,h*2);
+  return {...s,
+    dot:(x,y,c)=>s.dot(x*2,y*2,c),
+    rect:(x,y,w,h,c)=>s.rect(x*2,y*2,w*2,h*2,c),
+    line:(x,y,xx,yy,c)=>s.line(x*2,y*2,xx*2,yy*2,c),
+    polygon:(points,c,stroke)=>s.polygon(points.map(([x,y])=>[x*2,y*2]),c,stroke),
+    ellipse:(x,y,rx,ry,c,stroke)=>s.ellipse(x*2,y*2,rx*2,ry*2,c,stroke)};
+}
 function crc32(bytes){let crc=0xffffffff;for(const byte of bytes){crc^=byte;for(let b=0;b<8;b++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}return(crc^0xffffffff)>>>0;}
 function chunk(type,data){const t=Buffer.from(type),size=Buffer.alloc(4),crc=Buffer.alloc(4);size.writeUInt32BE(data.length);crc.writeUInt32BE(crc32(Buffer.concat([t,data])));return Buffer.concat([size,t,data,crc]);}
 function save(name,s){
@@ -27,7 +37,7 @@ function save(name,s){
   console.log(`${name}: ${s.w}x${s.h}, ${new Set(s.cells.filter(Boolean)).size} colors`);
 }
 
-const guide=surface(32,40);
+const guide=fineSurface(32,40);
 guide.ellipse(16,38,12,1,C.ink);
 guide.rect(6,17,7,14,C.ink);guide.rect(7,18,5,12,C.greyDark);
 guide.polygon([[10,27],[15,27],[15,34],[13,36],[9,36]],C.gold);
@@ -41,33 +51,53 @@ guide.ellipse(16,10,10,10,C.gold,C.ink);guide.rect(12,2,7,1,C.goldLight);
 guide.ellipse(16,10,8,6,C.dark,C.cyan);
 guide.line(11,10,13,8,C.cyan);guide.line(13,8,14,10,C.cyan);guide.line(18,10,20,8,C.cyan);guide.line(20,8,21,10,C.cyan);
 guide.rect(12,20,9,7,C.ink);guide.rect(13,21,7,5,C.white);guide.rect(14,22,5,2,C.cyan);guide.dot(14,25,C.ink);guide.dot(18,25,C.ink);
+guide.line(14,13,18,13,C.cyan);guide.dot(13.5,12.5,C.cyan);guide.dot(18.5,12.5,C.cyan);
+guide.line(8,7,8,11,C.goldLight);guide.line(23,7,23,12,C.goldDark);
+guide.line(12,28,19,28,C.goldDark);guide.rect(15,23,1,1,C.cyanDark);
 save('astronauta-guia',guide);
 
-const ship=surface(64,40);
-ship.polygon([[14,15],[9,17],[6,20],[1,23],[7,23],[11,26],[15,25]],C.gold,null);
-ship.polygon([[14,18],[8,21],[5,22],[11,23],[14,24]],C.goldLight,null);
-ship.polygon([[23,11],[14,2],[34,13]],C.redDark);
-ship.polygon([[18,9],[27,9],[39,11],[48,14],[59,20],[48,25],[36,28],[25,30],[18,30]],C.white);
-ship.polygon([[20,24],[31,25],[45,23],[59,20],[48,25],[36,28],[25,30],[18,30]],C.grey,null);
-ship.polygon([[46,13],[51,16],[59,20],[51,23],[46,26],[48,21],[48,18]],C.red);
-ship.polygon([[17,9],[25,9],[23,15],[23,24],[25,30],[17,30]],C.red);
-ship.ellipse(17,20,6,10,C.redDark,C.ink);ship.ellipse(16,20,4,7,C.grey,C.ink);ship.ellipse(15,20,2,5,C.glass);ship.rect(14,18,1,4,C.gold);
-ship.polygon([[25,26],[16,38],[37,27]],C.red);ship.polygon([[25,31],[16,38],[30,32]],C.redDark,null);
-ship.ellipse(37,15,3,2,C.greyDark,C.ink);ship.rect(36,14,3,2,C.glass);ship.rect(28,11,7,1,C.white);ship.rect(34,23,2,1,C.gold);
+// Redrawn at twice the source resolution: distinct fins, tapered hull and rear nozzle.
+// This is new geometry, not an enlarged copy of the previous sprite.
+const ship=surface(128,80);
+ship.polygon([[42,24],[31,5],[38,4],[64,22],[69,29]],C.redDark);
+ship.line(35,7,58,23,C.red);
+ship.polygon([[34,32],[21,31],[10,38],[1,43],[11,45],[19,51],[33,48]],C.gold,null);
+ship.polygon([[34,36],[23,36],[14,41],[8,43],[20,46],[33,44]],C.goldLight,null);
+ship.polygon([[37,22],[53,20],[74,23],[95,30],[120,40],[100,50],[74,57],[50,61],[35,57]],C.ink);
+ship.polygon([[39,24],[54,22],[75,25],[97,32],[116,40],[96,48],[74,54],[50,58],[38,54]],C.white,null);
+ship.polygon([[39,47],[57,50],[79,48],[104,43],[116,40],[96,48],[74,54],[50,58],[38,54]],C.grey,null);
+ship.polygon([[94,29],[105,34],[120,40],[105,47],[94,51],[98,42],[98,37]],C.red);
+ship.line(99,32,114,39,C.goldLight);
+ship.polygon([[36,23],[49,22],[46,30],[45,45],[50,58],[36,58]],C.red);
+ship.polygon([[46,46],[53,48],[72,50],[52,65],[33,76],[29,74],[38,55]],C.red);
+ship.polygon([[46,55],[58,53],[49,64],[33,74],[38,62]],C.redDark,null);
+ship.line(38,60,31,73,C.goldLight);
+ship.ellipse(35,40,11,18,C.redDark,C.ink);
+ship.ellipse(33,40,8,14,C.grey,C.ink);
+ship.ellipse(32,40,5,11,C.glass,C.ink);
+ship.ellipse(31,40,3,8,C.goldDark);
+ship.ellipse(30,40,2,5,C.goldLight);
+ship.line(40,27,42,31,C.red);ship.line(40,49,43,53,C.red);
+ship.ellipse(75,32,7,5,C.greyDark,C.ink);
+ship.ellipse(75,32,5,3,C.glass);
+ship.line(72,30,76,30,C.white);
+ship.line(56,26,66,27,C.white);
+ship.line(58,45,67,46,C.greyDark);
 save('cohete',ship);
 
-const planet=surface(32,32);
-planet.ellipse(16,16,14,14,C.planet,C.ink);
-for(let y=2;y<31;y++)for(let x=2;x<31;x++)if((x-16)**2+(y-16)**2<=169){if(x>24||y>25)planet.dot(x,y,C.planetDark);else if((x>=11&&x<=15&&y<=8)||(x>=13&&x<=19&&y>=8&&y<=12)||(x>=18&&x<=23&&y>=12&&y<=17)||(x>=7&&x<=12&&y>=21&&y<=25))planet.dot(x,y,C.land);}
+const planet=surface(64,64);
+planet.ellipse(32,32,28,28,C.planet,C.ink);
+for(let y=5;y<60;y++)for(let x=5;x<60;x++)if((x-32)**2+(y-32)**2<=729){if(x>49||y>51)planet.dot(x,y,C.planetDark);else if((x>=22&&x<=30&&y<=16)||(x>=26&&x<=38&&y>=16&&y<=24)||(x>=36&&x<=46&&y>=24&&y<=34)||(x>=14&&x<=24&&y>=42&&y<=50))planet.dot(x,y,C.land);}
+planet.line(18,12,24,10,C.land);planet.line(13,17,16,14,C.land);
 save('planeta-destino',planet);
 
-const background=surface(384,216);background.rect(0,0,384,216,C.sky);
+const background=fineSurface(384,216);background.rect(0,0,384,216,C.sky);
 let seed=73;const random=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
 for(let i=0;i<49;i++){let x=Math.floor(random()*384),y=8+Math.floor(random()*164);background.dot(x,y,i%4===0?C.goldLight:C.grey);}
 for(const[x,y]of [[45,76],[135,34],[248,71],[355,46]]){background.line(x-1,y,x+1,y,C.white);background.line(x,y-1,x,y+1,C.white);}
 const ring=(frontOnly)=>{for(let t=0;t<Math.PI*2;t+=.035){if(frontOnly&&Math.sin(t)<0)continue;const a=Math.cos(t)*27,b=Math.sin(t)*6;const angle=-.3;background.dot(70+a*Math.cos(angle)-b*Math.sin(angle),103+a*Math.sin(angle)+b*Math.cos(angle),C.grey);}};
 ring(false);background.ellipse(70,103,15,15,C.goldDark,C.ink);
-for(let y=89;y<=117;y++)for(let x=55;x<=85;x++)if((x-70)**2+(y-103)**2<196&&((y>=95&&y<=97)||(y>=104&&y<=106)))background.dot(x,y,C.gold);
+for(let y=89;y<=117;y++)for(let x=55;x<=85;x++)if((x-70)**2+(y-103)**2<196&&((y>=95&&y<=97)||(y>=104&&y<=106)))background.rect(x,y,1,1,C.gold);
 ring(true);background.ellipse(144,92,4,4,C.grey);background.dot(143,91,C.greyDark);
 for(let x=0;x<384;x++){const top=Math.round(185+Math.sin(x/51)*3+Math.sin(x/121)*2);background.rect(x,top,1,216-top,C.ground);background.dot(x,top,C.white);}
 for(const[x,y,rx]of [[36,198,9],[116,208,13],[247,200,7],[340,211,14]]){background.ellipse(x,y,rx,2,C.groundDark);background.line(x-rx+2,y-2,x+rx-2,y-2,C.grey);}
