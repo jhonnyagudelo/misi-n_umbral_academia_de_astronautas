@@ -29,8 +29,14 @@ import '../styles/global.css';
         <p class="subtitle">Academia de Astronautas</p>
         <div class="scene-space" aria-hidden="true"></div>
         <div class="invitation">
-          <h2>Pequeñas decisiones. <span>Grandes misiones.</span></h2>
-          <p>Prepara tu misión, explora el espacio y cuida tu base lunar.<br class="desktop-break" /> Cada decisión cuenta. ¿Te animas a ser astronauta?</p>
+          <section class="astronaut-dialogue" aria-label="Bienvenida del astronauta">
+            <img class="astronaut-guide" src="/images/astronauta-guia.svg" width="86" height="109" alt="El astronauta guía te saluda." />
+            <div class="speech-bubble">
+              <p class="speaker">TU GUÍA ASTRONAUTA</p>
+              <h2>Pequeñas decisiones. <span>Grandes misiones.</span></h2>
+              <p class="mission-description">Prepara tu misión, explora el espacio y cuida tu base lunar.<br class="desktop-break" /> Cada decisión cuenta. ¿Te animas a ser astronauta?</p>
+            </div>
+          </section>
           <a class="play-button" href="/juego">Juega ya <svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           <p class="play-note">Una aventura para mentes curiosas de 7 a 12 años</p>
         </div>
@@ -100,10 +106,15 @@ import '../styles/global.css';
     inset: 0;
     background: linear-gradient(180deg, #081426d9 0%, #08142699 20%, #0814260a 45%, #08142626 58%, #081426e6 79%, #081426f5 100%);
   }
-  .invitation { background: radial-gradient(ellipse at center, #081426e6 0%, #081426b3 65%, #08142600 100%); text-shadow: 0 2px 12px #061224; display: grid; justify-items: center; gap: clamp(4px, .8dvh, 7px); }
-  h2 { font-size: clamp(18px, 2.8dvh, 23px); font-weight: 750; line-height: 1.3; letter-spacing: -.035em; margin: 0; }
+  .invitation { display: grid; justify-items: center; gap: clamp(4px, .8dvh, 7px); }
+  .astronaut-dialogue { position: relative; display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: end; gap: 16px; width: min(100%, 740px); }
+  .astronaut-guide { display: block; width: 96px; height: auto; filter: drop-shadow(0 6px 10px #06122480); }
+  .speech-bubble { position: relative; min-width: 0; padding: 13px 18px; border: 2px solid #f4c995; border-radius: 18px 18px 18px 5px; background: #fff5e2; color: #202e42; text-align: left; box-shadow: 0 6px 24px #06122440; }
+  .speech-bubble::before { content: ''; position: absolute; left: -10px; bottom: 27px; width: 16px; height: 16px; transform: rotate(45deg); border-left: 2px solid #f4c995; border-bottom: 2px solid #f4c995; background: #fff5e2; }
+  .speaker { margin: 0 0 5px; color: #8e3c20; font-size: 9px; font-weight: 800; line-height: 1.4; letter-spacing: .12em; }
+  h2 { font-size: clamp(18px, 2.6dvh, 21px); font-weight: 750; line-height: 1.3; letter-spacing: -.035em; margin: 0; }
   h2 span { white-space: nowrap; }
-  .invitation > p:not(.play-note) { margin: 0; max-width: 540px; font-size: 14px; color: #edf2f7; line-height: 1.5; }
+  .mission-description { margin: 6px 0 0; font-size: 14px; color: #3f4f60; line-height: 1.5; }
   .play-button { display: inline-flex; align-items: center; justify-content: center; gap: 32px; min-width: 208px; min-height: 44px; margin: clamp(4px, 1dvh, 10px) 0 4px; padding: 9px 22px; border: 1px solid #a84020; border-radius: 11px; background: #bd4b28; box-shadow: 0 4px 0 #91371c; color: #fffaf1; font-weight: 750; font-size: 17px; text-decoration: none; transition: background .16s, transform .16s, box-shadow .16s; }
   .play-button svg { width: 22px; height: 22px; }
   .play-button:hover { background: #a73e1e; transform: translateY(-2px); box-shadow: 0 6px 0 #91371c; }
@@ -123,7 +134,12 @@ import '../styles/global.css';
     .eyebrow { font-size: 8px; letter-spacing: .1em; }
 
 
-    .invitation > p:not(.play-note) { font-size: 13px; }
+    .astronaut-dialogue { display: block; }
+    .astronaut-guide { position: absolute; z-index: 1; top: -47px; left: 6px; width: 70px; }
+    .speech-bubble { padding: 10px 13px; border-radius: 16px; }
+    .speech-bubble::before { top: -9px; left: 61px; bottom: auto; border-left: 2px solid #f4c995; border-top: 2px solid #f4c995; border-bottom: 0; }
+    .speaker { padding-left: 65px; min-height: 17px; font-size: 8px; letter-spacing: .06em; }
+    .mission-description { font-size: 13px; }
     .desktop-break { display: none; }
     .play-button { width: min(100%, 260px); }
     .play-note { font-size: 9px; }
@@ -134,14 +150,19 @@ import '../styles/global.css';
     .mission-scene::after { background: linear-gradient(90deg, #0814260a, #08142633 35%, #081426df 55%, #081426f0); }
     .masthead { min-height: 32px; }
     .mission-mark { width: 24px; height: 24px; }
-    .welcome { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr); column-gap: clamp(14px, 3vw, 30px); padding: 10px 0; gap: 6px 20px; }
-    .scene-space { grid-column: 1; grid-row: 1 / -1; }
+    .welcome { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); grid-template-rows: auto minmax(0, 1fr); padding: 10px 0; gap: 6px 24px; }
+    .scene-space { display: none; }
     .eyebrow { display: none; }
-    h1 { grid-column: 2; grid-row: 1; font-size: clamp(28px, 5dvh, 38px); }
-    .subtitle { grid-column: 2; grid-row: 2; font-size: 15px; }
-    .invitation { grid-column: 2; grid-row: 3; align-content: center; gap: 5px; }
+    h1 { grid-column: 1; grid-row: 1; font-size: clamp(28px, 5dvh, 38px); }
+    .subtitle { grid-column: 1; grid-row: 2; align-self: start; font-size: 15px; }
+    .invitation { grid-column: 2; grid-row: 1 / -1; align-content: center; gap: 5px; }
+    .astronaut-dialogue { display: block; }
+    .astronaut-guide { position: absolute; top: auto; left: -70px; bottom: 0; width: 62px; }
+    .speech-bubble { padding: 9px 12px; }
+    .speech-bubble::before { top: auto; left: -10px; bottom: 27px; border-left: 2px solid #f4c995; border-bottom: 2px solid #f4c995; border-top: 0; }
+    .speaker { padding: 0; min-height: 0; font-size: 8px; }
     h2 { font-size: 16px; }
-    .invitation > p:not(.play-note) { font-size: 12px; line-height: 1.4; }
+    .mission-description { font-size: 12px; line-height: 1.4; }
     .desktop-break { display: none; }
     .play-button { min-width: 0; width: min(100%, 224px); margin-top: 4px; font-size: 16px; }
     .play-note { display: none; }
