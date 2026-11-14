@@ -215,6 +215,10 @@ El siguiente paso está en [`GUIA-DE-INICIO.md`](./GUIA-DE-INICIO.md): Paso 4, l
 
 La implementación de la portada adaptable y su ilustración vectorial espacial original se realizaron con asistencia de IA en Codex, a partir del boceto compartido por Felipe.
 
+### Condiciones gráficas vigentes
+
+La primera entrega usa cartoon 2D sencillo: contornos oscuros, formas redondeadas, traje dorado, fondo azul grisáceo y acentos cian, con colores planos y sombreado básico. Se parte de imágenes estáticas; caminar, partículas y otros efectos son opcionales. No se exige rigging, Spine ni Live2D. La portada y el guía ya siguen este criterio; los recursos de la base y la escena jugable continúan pendientes. Ver [condiciones de arte y animación](docs/Condiciones%20de%20arte%20y%20animacion%20-%20Mision%20Umbral.md).
+
 ## Licencia y créditos
 
 **PENDIENTE:** elegir licencia para el código y registrar la procedencia de todo recurso gráfico o sonoro de terceros (nombre, autor, licencia y enlace).
