@@ -2,6 +2,12 @@
 
 Entrenador de misión web para niños y niñas de 7 a 12 años. El jugador prepara una misión, aprende con AVATAR y mantiene una base lunar con decisiones de recursos limitados.
 
+## Vista previa de la portada
+
+[Abrir Misión Umbral en el navegador](https://mision-umbral-academia.jfelipevv-2005.chatgpt.site)
+
+Enlace público para revisar la portada desde otros equipos, sin instalar el proyecto. Publicado el 14 de noviembre de 2026 desde la rama `felipe/escena-base` (código `1641994`). La portada se adapta a la pantalla; **el juego todavía está en construcción** y «Juega ya» abre su pantalla básica. Esta vista previa es una copia publicada: los cambios futuros en GitHub requieren volver a publicarla.
+
 **NASA Space Apps Challenge** · Reto: *Build a Junior Astronaut Mission Trainer*
 Documento de dirección: [`Direccion del juego - Mision Umbral - Revision Jonny.pdf`](./Direccion%20del%20juego%20-%20Mision%20Umbral%20-%20Revision%20Jonny.pdf)
 
@@ -206,6 +212,8 @@ El siguiente paso está en [`GUIA-DE-INICIO.md`](./GUIA-DE-INICIO.md): Paso 4, l
 ## Declaración de uso de IA
 
 **PENDIENTE: completar al cerrar la entrega.** El documento de dirección fue elaborado con asistencia de IA. El equipo debe listar aquí las herramientas efectivamente usadas para construir el juego y qué parte del trabajo asistió cada una. No afirmar respaldo, aprobación ni afiliación de NASA.
+
+La implementación de la portada adaptable y su ilustración vectorial espacial original se realizaron con asistencia de IA en Codex, a partir del boceto compartido por Felipe.
 
 ## Licencia y créditos
 
