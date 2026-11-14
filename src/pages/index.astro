@@ -13,9 +13,9 @@ import '../styles/global.css';
   </head>
   <body>
     <div class="mission-scene" aria-hidden="true">
-      <img src="/images/home-scene.svg" width="1000" height="400" alt="" fetchpriority="high" />
-      <img class="destination-planet" src="/images/planeta-destino.svg" width="100" height="100" alt="" />
-      <img class="flying-rocket" src="/images/cohete.svg" width="300" height="180" alt="" />
+      <img src="/images/home-scene.png" width="384" height="216" alt="" fetchpriority="high" />
+      <img class="destination-planet" src="/images/planeta-destino.png" width="32" height="32" alt="" />
+      <canvas class="flying-rocket" width="96" height="96"><img src="/images/cohete.png" alt="" /></canvas>
     </div>
     <main class="academy">
       <header class="masthead" aria-label="Misión Umbral">
@@ -32,7 +32,7 @@ import '../styles/global.css';
         <div class="scene-space" aria-hidden="true"></div>
         <div class="invitation">
           <section class="astronaut-dialogue" aria-label="Bienvenida del astronauta">
-            <img class="astronaut-guide" src="/images/astronauta-guia.svg" width="86" height="109" alt="El astronauta guía te saluda." />
+            <img class="astronaut-guide" src="/images/astronauta-guia.png" width="32" height="40" alt="El astronauta guía te saluda." />
             <div class="speech-bubble">
               <p class="speaker">TU GUÍA ASTRONAUTA</p>
               <h2>Pequeñas decisiones. <span>Grandes misiones.</span></h2>
@@ -50,20 +50,43 @@ import '../styles/global.css';
 
 <script>
   const scene = document.querySelector<HTMLElement>('.mission-scene');
-  const rocket = document.querySelector<HTMLElement>('.flying-rocket');
+  const rocket = document.querySelector<HTMLCanvasElement>('.flying-rocket');
   const planet = document.querySelector<HTMLElement>('.destination-planet');
 
   if (scene && rocket && planet) {
+    const sprite = new Image();
+    const context = rocket.getContext('2d');
     // Keep the nose aimed at the planet when the viewport changes shape.
     const alignRocket = () => {
       const ship = rocket.getBoundingClientRect();
       const destination = planet.getBoundingClientRect();
       const dx = destination.x + destination.width / 2 - ship.x - ship.width / 2;
       const dy = destination.y + destination.height / 2 - ship.y - ship.height / 2;
-      rocket.style.setProperty('--flight-heading', `${Math.atan2(dy, dx) * 180 / Math.PI}deg`);
+      const heading = Math.atan2(dy, dx);
+      rocket.style.setProperty('--flight-heading', `${heading * 180 / Math.PI}deg`);
+      if (context && sprite.complete && sprite.naturalWidth > 0) {
+        // Rotate on the source pixel grid, then enlarge the canvas without smoothing.
+        context.clearRect(0, 0, 96, 96);
+        context.imageSmoothingEnabled = false;
+        context.save();
+        context.translate(48, 48);
+        context.rotate(heading);
+        context.drawImage(sprite, -32, -20);
+        context.restore();
+        rocket.dataset.ready = 'true';
+      }
     };
 
-    new ResizeObserver(alignRocket).observe(scene);
+    let alignmentFrame = 0;
+    const scheduleAlignment = () => {
+      cancelAnimationFrame(alignmentFrame);
+      alignmentFrame = requestAnimationFrame(alignRocket);
+    };
+    sprite.onload = scheduleAlignment;
+    sprite.src = '/images/cohete.png';
+    const layoutObserver = new ResizeObserver(scheduleAlignment);
+    for (const element of [scene, rocket, planet]) layoutObserver.observe(element);
+    window.addEventListener('resize', scheduleAlignment, { passive: true });
     alignRocket();
   }
 </script>
@@ -95,7 +118,7 @@ import '../styles/global.css';
     isolation: isolate;
   }
   .masthead { min-height: clamp(36px, 7dvh, 60px); display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #ffffff26; font-size: 9px; font-weight: 750; letter-spacing: .12em; }
-  .mission-mark { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #ffffff40; border-radius: 50%; flex-shrink: 0; }
+  .mission-mark { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid #ffffff40; border-radius: 3px; flex-shrink: 0; }
   .mission-mark svg { width: 23px; height: 23px; }
   .edition { margin-left: auto; color: #c7d7e3; white-space: nowrap; }
   .edition span { margin-left: 8px; color: #f4cc75; font-size: 16px; }
@@ -114,16 +137,9 @@ import '../styles/global.css';
   .subtitle { margin: 0; font-size: clamp(15px, 2.8dvh, 21px); font-weight: 450; letter-spacing: .015em; }
   .scene-space { min-height: 0; }
   .mission-scene { position: fixed; inset: 0; margin: 0; pointer-events: none; background: #233b4e; }
-  .mission-scene img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 57% center; }
-  .mission-scene .destination-planet { position: absolute; z-index: 1; left: 82%; top: 25%; width: clamp(72px, 11vw, 160px); height: auto; object-fit: contain; opacity: .88; transform: translate(-50%, -50%); }
-  .mission-scene .flying-rocket { position: absolute; left: 55%; top: 46%; width: clamp(220px, 25vw, 360px); height: auto; object-fit: contain; transform: translate(-50%, -50%) rotate(var(--flight-heading, -30deg)); }
-  .mission-scene::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(circle at 25px 37px, #ffffffd9 1px, transparent 1.5px), radial-gradient(circle at 91px 113px, #dcecffb3 .7px, transparent 1.3px), radial-gradient(circle at 143px 61px, #d8e6ed80 1px, transparent 1.5px);
-    background-size: 283px 263px, 371px 329px, 447px 407px;
-  }
+  .mission-scene img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 57% center; image-rendering: pixelated; }
+  .mission-scene .destination-planet { position: absolute; z-index: 1; left: 82%; top: 25%; width: 96px; height: auto; object-fit: contain; transform: translate(-50%, -50%); }
+  .mission-scene .flying-rocket { position: absolute; left: 55%; top: 46%; width: 288px; height: auto; image-rendering: pixelated; transform: translate(-50%, -50%); }
   .mission-scene::after {
     content: '';
     position: absolute;
@@ -132,14 +148,14 @@ import '../styles/global.css';
   }
   .invitation { display: grid; justify-items: center; gap: clamp(4px, .8dvh, 7px); }
   .astronaut-dialogue { position: relative; display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: end; gap: 16px; width: min(100%, 740px); }
-  .astronaut-guide { display: block; width: 96px; height: auto; filter: drop-shadow(0 6px 10px #06122480); }
-  .speech-bubble { position: relative; min-width: 0; padding: 13px 18px; border: 2px solid #69d4e2; border-radius: 18px 18px 18px 5px; background: #203d52; color: #f1f7fa; text-align: left; box-shadow: 0 6px 24px #06122440; }
+  .astronaut-guide { display: block; width: 96px; height: auto; image-rendering: pixelated; }
+  .speech-bubble { position: relative; min-width: 0; padding: 13px 18px; border: 2px solid #69d4e2; border-radius: 3px; background: #203d52; color: #f1f7fa; text-align: left; box-shadow: 4px 4px 0 #122638; }
   .speech-bubble::before { content: ''; position: absolute; left: -10px; bottom: 27px; width: 16px; height: 16px; transform: rotate(45deg); border-left: 2px solid #69d4e2; border-bottom: 2px solid #69d4e2; background: #203d52; }
   .speaker { margin: 0 0 5px; color: #f4cc75; font-size: 9px; font-weight: 800; line-height: 1.4; letter-spacing: .12em; }
   h2 { font-size: clamp(18px, 2.6dvh, 21px); font-weight: 750; line-height: 1.3; letter-spacing: -.035em; margin: 0; }
   h2 span { white-space: nowrap; }
   .mission-description { margin: 6px 0 0; font-size: 14px; color: #dce9f0; line-height: 1.5; }
-  .play-button { display: inline-flex; align-items: center; justify-content: center; gap: 32px; min-width: 208px; min-height: 44px; margin: clamp(4px, 1dvh, 10px) 0 4px; padding: 9px 22px; border: 1px solid #358495; border-radius: 11px; background: #69d4e2; box-shadow: 0 4px 0 #2e6d7d; color: #102b3e; font-weight: 750; font-size: 17px; text-decoration: none; transition: background .16s, transform .16s, box-shadow .16s; }
+  .play-button { display: inline-flex; align-items: center; justify-content: center; gap: 32px; min-width: 208px; min-height: 44px; margin: clamp(4px, 1dvh, 10px) 0 4px; padding: 9px 22px; border: 1px solid #358495; border-radius: 3px; background: #69d4e2; box-shadow: 0 4px 0 #2e6d7d; color: #102b3e; font-weight: 750; font-size: 17px; text-decoration: none; transition: background .16s, transform .16s, box-shadow .16s; }
   .play-button svg { width: 22px; height: 22px; }
   .play-button:hover { background: #9ae6ee; transform: translateY(-2px); box-shadow: 0 6px 0 #2e6d7d; }
   .play-button:active { transform: translateY(3px); box-shadow: 0 1px 0 #2e6d7d; }
@@ -150,8 +166,8 @@ import '../styles/global.css';
   footer > span:first-child span { margin: 0 6px; color: #69d4e2; }
   footer > span:last-child > span { color: #69d4e2; margin-left: 6px; }
   @media (max-width: 650px) {
-    .mission-scene .destination-planet { left: 82%; top: 29%; width: clamp(58px, 18vw, 88px); }
-    .mission-scene .flying-rocket { left: 45%; top: 44%; width: min(70vw, 270px); }
+    .mission-scene .destination-planet { left: 82%; top: 29%; width: 64px; }
+    .mission-scene .flying-rocket { left: 45%; top: 44%; width: 192px; }
     .academy { padding: 0 16px; border-radius: 18px; }
     .masthead { gap: 7px; font-size: 7px; letter-spacing: .05em; }
     .mission-mark { width: 25px; height: 25px; }
@@ -161,8 +177,8 @@ import '../styles/global.css';
 
 
     .astronaut-dialogue { display: block; }
-    .astronaut-guide { position: absolute; z-index: 1; top: -47px; left: 6px; width: 70px; }
-    .speech-bubble { padding: 10px 13px; border-radius: 16px; }
+    .astronaut-guide { position: absolute; z-index: 1; top: -43px; left: 6px; width: 64px; }
+    .speech-bubble { padding: 10px 13px; border-radius: 3px; }
     .speech-bubble::before { top: -9px; left: 61px; bottom: auto; border-left: 2px solid #69d4e2; border-top: 2px solid #69d4e2; border-bottom: 0; }
     .speaker { padding-left: 65px; min-height: 17px; font-size: 8px; letter-spacing: .06em; }
     .mission-description { font-size: 13px; }
@@ -173,12 +189,12 @@ import '../styles/global.css';
     footer > span:last-child { display: none; }
   }
   @media (max-height: 600px) and (max-width: 650px) {
-    .mission-scene .destination-planet { left: 84%; top: 34%; width: 54px; }
-    .mission-scene .flying-rocket { left: 43%; top: 38%; width: min(60vw, 190px); }
+    .mission-scene .destination-planet { left: 84%; top: 34%; width: 64px; }
+    .mission-scene .flying-rocket { left: 43%; top: 38%; width: 192px; }
   }
   @media (max-height: 550px) and (min-width: 560px) {
-    .mission-scene .destination-planet { left: 90%; top: 20%; width: clamp(42px, 10dvh, 60px); }
-    .mission-scene .flying-rocket { left: 23%; top: 57%; width: min(32vw, 260px); }
+    .mission-scene .destination-planet { left: 90%; top: 20%; width: 32px; }
+    .mission-scene .flying-rocket { left: 23%; top: 57%; width: 192px; }
     .mission-scene::after { background: linear-gradient(90deg, #0814260a, #08142633 35%, #081426df 55%, #081426f0); }
     .masthead { min-height: 32px; }
     .mission-mark { width: 24px; height: 24px; }
@@ -189,7 +205,7 @@ import '../styles/global.css';
     .subtitle { grid-column: 1; grid-row: 2; align-self: start; font-size: 15px; }
     .invitation { grid-column: 2; grid-row: 1 / -1; align-content: center; gap: 5px; }
     .astronaut-dialogue { display: block; }
-    .astronaut-guide { position: absolute; top: auto; left: -70px; bottom: 0; width: 62px; }
+    .astronaut-guide { position: absolute; top: auto; left: -70px; bottom: 0; width: 64px; }
     .speech-bubble { padding: 9px 12px; }
     .speech-bubble::before { top: auto; left: -10px; bottom: 27px; border-left: 2px solid #69d4e2; border-bottom: 2px solid #69d4e2; border-top: 0; }
     .speaker { padding: 0; min-height: 0; font-size: 8px; }

@@ -217,7 +217,7 @@ La implementación de la portada adaptable y su ilustración vectorial espacial 
 
 ### Condiciones gráficas vigentes
 
-La primera entrega usa cartoon 2D sencillo: contornos oscuros, formas redondeadas, traje dorado, fondo azul grisáceo y acentos cian, con colores planos y sombreado básico. Se parte de imágenes estáticas; caminar, partículas y otros efectos son opcionales. No se exige rigging, Spine ni Live2D. La portada y el guía ya siguen este criterio; los recursos de la base y la escena jugable continúan pendientes. Ver [condiciones de arte y animación](docs/Condiciones%20de%20arte%20y%20animacion%20-%20Mision%20Umbral.md).
+La primera entrega usa pixel art cartoon espacial sencillo: contornos oscuros, píxeles visibles, traje dorado, fondo azul grisáceo y acentos cian, con paleta corta y sombras por bloques. La portada usa PNG nativos transparentes y escalas enteras, sin suavizado. El cohete rojo conserva la perspectiva hacia el planeta y se orienta sobre una cuadrícula de píxeles. Se parte de imágenes estáticas; caminar, partículas y otros ciclos son opcionales. No se exige rigging, Spine ni Live2D. Los recursos de la base y la escena jugable continúan pendientes. Ver [condiciones de arte y animación](docs/Condiciones%20de%20arte%20y%20animacion%20-%20Mision%20Umbral.md).
 
 ## Licencia y créditos
 
@@ -226,3 +226,5 @@ La primera entrega usa cartoon 2D sencillo: contornos oscuros, formas redondeada
 ## Aviso
 
 Proyecto educativo independiente para el NASA Space Apps Challenge. No es un producto de NASA ni está respaldado por NASA. Las cifras, tiempos y efectos del juego son reglas de diseño didáctico, no mediciones médicas, eléctricas ni de ingeniería.
+
+Los editables vectoriales y los PNG de la portada se reproducen con `node scripts/create-home-pixel-art.mjs`. Los sprites usan bases de 32 × 40 (guía), 64 × 40 (cohete) y 32 × 32 (planeta); el fondo es de 384 × 216. La ilustración y el código de generación se prepararon con asistencia de IA, sin reutilizar elementos gráficos de las referencias.
