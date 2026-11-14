@@ -16,16 +16,6 @@
   <g stroke="#dce3ce" stroke-opacity=".6"><path d="M92 350c12-7 40-7 56 0M270 372c20-9 52-7 70 0M810 340c15-6 35-6 49 0"/></g>
   <g fill="#708c8f"><path d="m61 328 9-6 11 9ZM751 327l10-8 15 12ZM391 350l7-5 10 7Z"/><circle cx="183" cy="375" r="2"/><circle cx="447" cy="373" r="2.3"/><circle cx="737" cy="377" r="2"/></g>
   <!-- Original, replaceable illustration of a fictional training scene. -->
-  <ellipse cx="516" cy="335" rx="64" ry="9" fill="#476c77" opacity=".35"/>
-  <path d="M500 280c-2 20 15 35 15 60 0-25 18-38 16-60Z" fill="#efc157"/>
-  <path d="M491 217c-24 10-37 36-37 65l33-15 13-29ZM540 217c24 10 37 36 37 65l-33-15-13-29Z" fill="#54b9c8" stroke="#172d42" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M487 179c1-38 11-65 28-88 18 23 29 50 30 88v85c-14 11-44 11-58 0Z" fill="#e5edf0" stroke="#172d42" stroke-width="3"/>
-  <path d="M491 153c5-26 13-45 24-62 12 17 21 36 26 62Z" fill="#54b9c8"/>
-  <path d="M488 249h56v15c-14 11-43 11-56 0Z" fill="#54b9c8"/>
-  <circle cx="516" cy="190" r="20" fill="#c5d4cf" stroke="#172d42" stroke-width="3"/>
-  <circle cx="516" cy="190" r="14" fill="#1d3b50"/><path d="M509 182c3-3 7-4 11-2" stroke="#84e5ec" stroke-width="3" stroke-linecap="round"/>
-  <path d="M501 275h30l5 8h-41Z" fill="#1c3446"/>
-  <path d="m515 227 6 10h-12Z" fill="#efc157"/>
-  <path d="M516 252v40" stroke="#172d42" stroke-width="4" stroke-linecap="round"/>
+
 
 </svg>

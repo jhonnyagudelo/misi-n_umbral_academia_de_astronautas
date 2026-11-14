@@ -14,6 +14,7 @@ import '../styles/global.css';
   <body>
     <div class="mission-scene" aria-hidden="true">
       <img src="/images/home-scene.svg" width="1000" height="400" alt="" fetchpriority="high" />
+      <img class="flying-rocket" src="/images/cohete.svg" width="230" height="230" alt="" />
     </div>
     <main class="academy">
       <header class="masthead" aria-label="Misión Umbral">
@@ -93,6 +94,7 @@ import '../styles/global.css';
   .scene-space { min-height: 0; }
   .mission-scene { position: fixed; inset: 0; margin: 0; pointer-events: none; background: #233b4e; }
   .mission-scene img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 57% center; }
+  .mission-scene .flying-rocket { position: absolute; left: 57%; top: 49%; width: clamp(260px, 38vw, 600px); height: auto; object-fit: contain; transform: translate(-50%, -50%); }
   .mission-scene::before {
     content: '';
     position: absolute;
@@ -126,6 +128,7 @@ import '../styles/global.css';
   footer > span:first-child span { margin: 0 6px; color: #69d4e2; }
   footer > span:last-child > span { color: #69d4e2; margin-left: 6px; }
   @media (max-width: 650px) {
+    .mission-scene .flying-rocket { left: 52%; top: 43%; width: min(94vw, 420px); }
     .academy { padding: 0 16px; border-radius: 18px; }
     .masthead { gap: 7px; font-size: 7px; letter-spacing: .05em; }
     .mission-mark { width: 25px; height: 25px; }
@@ -147,6 +150,7 @@ import '../styles/global.css';
     footer > span:last-child { display: none; }
   }
   @media (max-height: 550px) and (min-width: 560px) {
+    .mission-scene .flying-rocket { left: 23%; top: 52%; width: min(40vw, 320px); }
     .mission-scene::after { background: linear-gradient(90deg, #0814260a, #08142633 35%, #081426df 55%, #081426f0); }
     .masthead { min-height: 32px; }
     .mission-mark { width: 24px; height: 24px; }
