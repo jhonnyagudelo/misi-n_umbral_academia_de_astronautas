@@ -25,6 +25,7 @@ export function Astronaut({ upgrades = [], className = '', grumpy = false }: { u
   return <div className={`astronaut ${className} ${grumpy ? 'grumpy' : ''}`}>
     {upgrades.includes('lung') && <span className="suit-backpack" aria-hidden="true"/>}
     <img src="/images/astronauta-guia.png" width="128" height="160" alt={grumpy ? 'Astronauta en Modo Gruñón' : 'Astronauta con traje dorado y visor cian'} draggable="false"/>
+    {['left','right'].map(side=><span key={side} className={`astronaut-leg astronaut-leg-${side}`} aria-hidden="true"><img src="/images/astronauta-guia.png" width="128" height="160" alt="" draggable="false"/></span>)}
     {grumpy && <><span className="grumpy-face" aria-hidden="true"><i/><i/><b/></span><span className="crossed-arms" aria-hidden="true"><i/><i/></span></>}
     {upgrades.includes('armor') && <span className="suit-chest" aria-hidden="true"/>}
     {upgrades.includes('radio') && <span className="suit-antenna" aria-hidden="true"/>}
@@ -39,7 +40,4 @@ export function Rocket({ ship, firing = false }: { ship: ShipId; firing?: boolea
     {firing && <g className="rocket-flame"><path d="M41 216h38l-7 17H48z" fill="#ef9957"/><path d="M49 216h22l-11 24z" fill="#ffe39a"/></g>}
     <path d="M15 223h90v5H15z" fill="#72b9cb"/>
   </svg>;
-}
-export function RoomDecor() {
-  return <div className="room-decor" aria-hidden="true"><div className="pipe pipe-left"/><div className="pipe pipe-right"/><div className="room-monitor left-monitor"><span>O₂</span><i/><i/><i/></div><div className="room-monitor right-monitor"><span>BASE / LINK</span><i/><i/></div><div className="room-console console-left"/><div className="room-console console-right"/></div>;
 }

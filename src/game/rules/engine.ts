@@ -63,7 +63,7 @@ function clampReserve(value: number): number {
   return value;
 }
 
-function isStationPowered(state: GameState, stationId: StationId): boolean {
+export function isStationPowered(state: GameState, stationId: StationId): boolean {
   const station = state.stations[stationId];
   if (station.batteryId === null) return false;
   return state.failure.batteryId !== station.batteryId || state.failure.status !== 'active';

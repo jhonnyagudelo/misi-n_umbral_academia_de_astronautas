@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { deflateSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 
@@ -27,13 +27,14 @@ function crc32(bytes){let crc=0xffffffff;for(const byte of bytes){crc^=byte;for(
 function chunk(type,data){const t=Buffer.from(type),size=Buffer.alloc(4),crc=Buffer.alloc(4);size.writeUInt32BE(data.length);crc.writeUInt32BE(crc32(Buffer.concat([t,data])));return Buffer.concat([size,t,data,crc]);}
 function save(name,s){
   const root=fileURLToPath(new URL('../public/images/',import.meta.url));
+  const editable=fileURLToPath(new URL('../assets/source/',import.meta.url));mkdirSync(editable,{recursive:true});
   const raw=Buffer.alloc(s.h*(s.w*4+1));
   const pieces=[];
   for(let y=0;y<s.h;y++)for(let x=0;x<s.w;x++){const color=s.cells[y*s.w+x];if(!color)continue;const v=parseInt(color.slice(1),16),offset=y*(s.w*4+1)+1+x*4;raw[offset]=v>>16;raw[offset+1]=(v>>8)&255;raw[offset+2]=v&255;raw[offset+3]=255;}
   for(let y=0;y<s.h;y++)for(let x=0;x<s.w;){const color=s.cells[y*s.w+x];if(!color){x++;continue;}let end=x+1;while(end<s.w&&s.cells[y*s.w+end]===color)end++;pieces.push(`<rect x="${x}" y="${y}" width="${end-x}" height="1" fill="${color}"/>`);x=end;}
   const header=Buffer.alloc(13);header.writeUInt32BE(s.w);header.writeUInt32BE(s.h,4);header[8]=8;header[9]=6;
   writeFileSync(`${root}${name}.png`,Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('IDAT',deflateSync(raw)),chunk('IEND',Buffer.alloc(0))]));
-  writeFileSync(`${root}${name}.svg`,`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s.w} ${s.h}" shape-rendering="crispEdges">\n${pieces.join('\n')}\n</svg>\n`);
+  writeFileSync(`${editable}${name}.svg`,`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s.w} ${s.h}" shape-rendering="crispEdges">\n${pieces.join('\n')}\n</svg>\n`);
   console.log(`${name}: ${s.w}x${s.h}, ${new Set(s.cells.filter(Boolean)).size} colors`);
 }
 

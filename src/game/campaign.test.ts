@@ -33,6 +33,49 @@ function advance(s: Campaign, ms: number) {
 }
 
 describe('preparación de la campaña', () => {
+  it('termina de alcanzar un piso antes de caminar tras restaurar una escalera',()=>{
+    const s={...arrived(),playerX:50,targetX:50,playerDeck:1.8,targetDeck:1.8};
+    expect(tick(s,100).playerDeck).toBe(1.8);
+    const first=tick(s,250,1);
+    expect(first.playerX).toBe(50);expect(first.playerDeck).toBe(2);
+    expect(tick(first,100,1).playerX).toBeGreaterThan(50);
+  });
+  it('mantiene la misma velocidad visual con teclas y clic en preparación, viaje y base',()=>{
+    const start=arrived('orion',['armor','gloves','radio']);
+    for(const phase of ['equipment','travel','base'] as const){
+      const s={...start,phase,playerX:20,targetX:20,playerDeck:1,targetDeck:1};
+      const keyboard=tick(s,100,1);
+      const click=tick(act(s,{type:'walk',x:90}),100);
+      const scale=phase==='base'?.72:1;
+      expect((keyboard.playerX-20)*scale).toBeCloseTo(2.4);
+      expect((click.playerX-20)*scale).toBeCloseTo(2.4);
+    }
+  });
+  it('abrevia la caminata exterior manteniendo su coste de oxígeno y no salta al regresar antes',()=>{
+    let s=act(arrived('orion',['armor','gloves','radio']),{type:'excursion',site:'recycler',route:'long'});
+    s=tick(s,1000/4); // el motor acota pasos a 250 ms
+    expect(s.excursion!.elapsed/s.excursion!.distance*53).toBeCloseTo(6);
+    const outbound=s.excursion!;s=act(s,{type:'return-outside'});
+    expect(s.excursion!.startX).toBeCloseTo(18);
+    expect(s.excursion!.distance).toBeCloseTo(outbound.elapsed);
+    for(let i=0;i<3;i++)s=tick(s,100);
+    expect(s.excursion).toBeNull();
+    expect(s.suit.oxygen).toBeCloseTo(70-outbound.elapsed*2);
+  });
+  it('anuncia el inicio y el fin de la alerta para que la voz lea la emergencia',()=>{
+    let s=advance(arrived(),90000);
+    expect(s.base.solar.status).toBe('active');expect(s.message).toMatch(/refugio/i);
+    s=act(s,{type:'base-action',action:{type:'set-shelter-presence',inside:true}});
+    s=advance(s,35000);expect(s.base.solar.status).toBe('resolved');expect(s.message).toMatch(/terminó|terminada/i);
+  });
+  it('camina hasta la escalera y sube de piso antes de acercarse al objeto',()=>{
+    let s:Campaign={...arrived(),playerX:20,targetX:20,playerDeck:1,targetDeck:1};
+    s=act(s,{type:'walk',x:80,deck:0});
+    const early=tick(s,250);expect(early.playerDeck).toBe(1);expect(early.playerX).toBeGreaterThan(20);
+    for(let i=0;i<120;i++)s=tick(s,100);
+    expect(s.playerDeck).toBe(0);expect(s.playerX).toBeCloseTo(80);
+    expect(s.base.activeMs).toBeCloseTo(12000);
+  });
   it('permite caminar en el hangar sin gastar reservas ni adelantar la operación', () => {
     let s = act(createCampaign(), { type: 'skip-intro' });
     s = act(s, { type: 'walk', x: 80 });
@@ -269,6 +312,18 @@ describe('recorridos completos de rescate', () => {
       s = act(s, { type: 'base-action', action: { type: 'set-shelter-presence', inside: false } });
       s = act(s, { type: 'base-action', action: { type: 'place-battery', batteryId: 'b4', stationId: 'greenhouse' } });
       s = act(act(s, { type: 'open-lab' }), { type: 'confirm-equipment' });
+      function visit(x: number, deck: number, waitMs: number) {
+        s = act(s, { type: 'walk', x, deck });
+        for (let step = 0; step < 200 && (Math.abs(s.playerX - x) > .001 || s.playerDeck !== deck); step++) s = tick(s, 100);
+        expect(s.playerX).toBeCloseTo(x); expect(s.playerDeck).toBe(deck);
+        s = advance(s, waitMs);
+      }
+      const refillStartedAt = s.base.activeMs;
+      visit(24, 2, 5000);
+      expect(s.suit.oxygen).toBe(140);
+      visit(76, 1, 4000);
+      expect(s.suit.thermal).toBe(100);
+      expect(s.base.activeMs - refillStartedAt).toBeGreaterThan(9000);
       sortie('recycler');
       for (let i = 0; i < 1500 && s.phase === 'base'; i++) s = tick(s, 100);
       expect(s.phase, s.cause).toBe('return');

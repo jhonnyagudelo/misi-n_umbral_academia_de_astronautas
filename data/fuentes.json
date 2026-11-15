@@ -1,52 +1,60 @@
 {
-  "estado": "PENDIENTE",
-  "instrucciones": "Completar enlace y fecha de consulta de cada fuente antes de la entrega. La columna tipo separa lo que sostiene NASA de lo que es regla del juego.",
-  "consultado": null,
+  "estado": "Fuentes consultadas; mecánicas Jezero propuestas pendientes de aprobación",
+  "instrucciones": "Separar principios reales de valores/tiempos y del hábitat futuro conceptual. No certificar una nave real ni dar por implementado el RTG.",
   "fuentes": [
     {
-      "id": 1,
-      "tema": "AVATAR (Artemis II): células de médula ósea como modelos de tejido",
+      "id": "rtg",
+      "tema": "Energía y calor de los RTG",
       "organizacion": "NASA Science",
-      "titulo": "Artemis II AVATAR",
-      "enlace": null,
+      "titulo": "Radioisotope Power Systems FAQ",
+      "enlace": "https://science.nasa.gov/planetary-science/programs/radioisotope-power-systems/faq/",
       "tipo": "Fuente NASA",
-      "estado": "PENDIENTE"
+      "consultado": "2026-11-15"
     },
     {
-      "id": 2,
-      "tema": "Nave Orion y uso de refugios y materiales frente a radiación",
+      "id": "pu238",
+      "tema": "Características radiológicas de Pu-238",
+      "organizacion": "NASA Science",
+      "titulo": "About Plutonium-238",
+      "enlace": "https://science.nasa.gov/planetary-science/programs/radioisotope-power-systems/about-plutonium-238/",
+      "tipo": "Fuente NASA",
+      "consultado": "2026-11-15"
+    },
+    {
+      "id": "radio",
+      "tema": "Demora variable entre Tierra y Marte",
+      "organizacion": "NASA Science",
+      "titulo": "Mars Relay Network",
+      "enlace": "https://science.nasa.gov/mars/mars-relay-network/",
+      "tipo": "Fuente NASA",
+      "consultado": "2026-11-15"
+    },
+    {
+      "id": "solar",
+      "tema": "Polvo y generación solar en Marte",
       "organizacion": "NASA",
-      "titulo": "Meet NASA's Orion Spacecraft",
-      "enlace": null,
+      "titulo": "The Fact and Fiction of Martian Dust Storms",
+      "enlace": "https://www.nasa.gov/solar-system/the-fact-and-fiction-of-martian-dust-storms/",
       "tipo": "Fuente NASA",
-      "estado": "PENDIENTE"
+      "consultado": "2026-11-15"
     },
     {
-      "id": 3,
-      "tema": "Clima espacial: datos y acceso al servicio DONKI",
-      "organizacion": "NASA CCMC",
-      "titulo": "DONKI",
-      "enlace": null,
-      "tipo": "Fuente NASA",
-      "estado": "PENDIENTE"
-    },
-    {
-      "id": 4,
-      "tema": "Oxígeno a partir de dióxido de carbono marciano (referencia de control: no se usa en la base lunar)",
+      "id": "plants",
+      "tema": "Cultivo espacial y cuidado de plantas",
       "organizacion": "NASA",
-      "titulo": "Mars Oxygen In-Situ Resource Utilization Experiment (MOXIE)",
-      "enlace": null,
+      "titulo": "Growing Plants in Space",
+      "enlace": "https://www.nasa.gov/exploration-research-and-technology/growing-plants-in-space/",
       "tipo": "Fuente NASA",
-      "estado": "PENDIENTE"
+      "consultado": "2026-11-15"
     },
     {
-      "id": 5,
-      "tema": "Reservas de aire, agua y confort térmico; tiempos de refugio; duración de la operación",
-      "organizacion": "Misión Umbral",
-      "titulo": "Reglas de la primera versión (documento de dirección §03)",
-      "enlace": null,
-      "tipo": "Regla del juego",
-      "estado": "DEFINIDO"
+      "id": "dust",
+      "tema": "Polvo marciano y hábitats",
+      "organizacion": "NASA",
+      "titulo": "NASA’s Perseverance Offers Clues to Protect Crews From Mars Dust",
+      "enlace": "https://www.nasa.gov/missions/mars-2020-perseverance/nasas-perseverance-offers-clues-to-protect-crews-from-mars-dust/",
+      "tipo": "Fuente NASA",
+      "consultado": "2026-11-15"
     }
   ]
 }

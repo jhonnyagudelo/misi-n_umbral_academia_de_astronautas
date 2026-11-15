@@ -2,18 +2,21 @@ import { createInitialState, dispatch as baseAct, tick as baseTick, isValidShelt
 import { BATTERY_IDS, STATION_IDS, PACKAGES, RULES_VERSION, BALANCE } from './rules/balance';
 import type { Action, GameState, PackageId, StationId } from './rules/types';
 import { SHIPS, SITES, UPGRADE_IDS, type UpgradeId } from '../content/equipment';
+import { SUIT_SERVICE_POINTS, suitServiceStatus } from './suit-service';
 export type { UpgradeId } from '../content/equipment';
 export type ShipId = keyof typeof SHIPS;
 export type SiteId = keyof typeof SITES;
 export type CargoId = 'water' | 'food' | 'battery';
 export type CampaignPhase = 'intro' | 'equipment' | 'ship' | 'shelter' | 'launch' | 'travel' | 'base' | 'return' | 'debrief' | 'failed';
-export type Excursion = { site: SiteId; stage: 'outbound' | 'work' | 'return'; elapsed: number; distance: number; progress: number; route: 'long' | 'short' };
+export type Excursion = { site: SiteId; stage: 'outbound' | 'work' | 'return'; elapsed: number; distance: number; progress: number; route: 'long' | 'short';startX?:number };
 export interface Snapshot {
+  tutorialSeen?: string[];
   phase: CampaignPhase; introStep: number; upgrades: (UpgradeId | null)[]; editingBase: boolean;
   ship: ShipId | null; cargo: (CargoId | null)[]; flightStep: number; flightCheck: number; flightElapsed?: number;
   travel: { leg: number; energy: number; water: number; reactants: number; observations: number };
   base: GameState; suit: { oxygen: number; energy: number; thermal: number; dust: number; shield: boolean; magnets: boolean; antenna: number };
   excursion: Excursion | null; repairs: Record<SiteId, boolean>; playerX: number; targetX: number;
+  playerDeck?:number;targetDeck?:number;
   message: string; cause: string; quiz: (number | null)[];
 }
 export interface Campaign extends Snapshot { checkpoint: Snapshot | null }
@@ -29,13 +32,20 @@ export type CampaignAction =
   | { type: 'excursion'; site: SiteId; route: 'long' | 'short' }
   | { type: 'antenna'; angle: number }
   | { type: 'base-action'; action: Action }
-  | { type: 'walk'; x: number }
+  | { type: 'walk'; x: number; deck?:number }
   | { type: 'quiz'; index: number; answer: number };
 
 // Units and multipliers below are adjustable training rules, never NASA measurements.
 export const CAMPAIGN_VERSION = 2;
 const clamp = (n: number, max = 100) => Math.max(0, Math.min(max, n));
 export const has = (s: Snapshot, id: UpgradeId) => s.upgrades.includes(id);
+export const walkingSpeed = (s: Snapshot) => 24 * (has(s,'lung')?.8:1);
+export function excursionX(s:Snapshot){
+  if(!s.excursion)return s.playerX;
+  const e=s.excursion;if(e.stage==='work')return 65;
+  const fraction=e.distance>0?Math.min(1,e.elapsed/e.distance):1;
+  return e.stage==='outbound'?12+fraction*53:(e.startX??65)-fraction*((e.startX??65)-12);
+}
 export const oxygenCapacity = (s: Snapshot) => has(s, 'lung') ? 140 : 70;
 export function freshSuit(s: Snapshot): Snapshot['suit'] {
   return { oxygen: oxygenCapacity(s), energy: 100, thermal: 100, dust: 0, shield: false, magnets: false, antenna: 0 };
@@ -45,7 +55,7 @@ export function createCampaign(): Campaign {
     travel: { leg: 0, energy: 100, water: 100, reactants: 100, observations: 0 }, base: createInitialState(),
     suit: { oxygen: 70, energy: 100, thermal: 100, dust: 0, shield: false, magnets: false, antenna: 0 },
     excursion: null, repairs: { recycler: false, relay: false, platform: false, crater: false },
-    playerX: 12, targetX: 12, message: 'Una llamada llega desde la Luna…', cause: '', quiz: [null, null, null], checkpoint: null };
+    playerX: 12, targetX: 12, message: 'Una llamada llega desde Marte…', cause: '', quiz: [null, null, null], checkpoint: null };
 }
 function snapshot(s: Campaign): Snapshot { const { checkpoint: _, ...rest } = s; return structuredClone(rest); }
 function safe(s: Campaign): Campaign { return { ...s, checkpoint: snapshot(s) }; }
@@ -55,6 +65,9 @@ export function repairDuration(ids: (UpgradeId | null)[], powered: boolean): num
   return 8 * (ids.includes('armor') ? 2 : 1) * (ids.includes('gloves') && powered ? 0.5 : 1);
 }
 export function cargoMass(s: Snapshot): number { return s.cargo.reduce((n, c) => n + (c === 'battery' ? 2 : c ? 1 : 0), 0); }
+export function arrivalWater(baseWater: number, cargo: (CargoId | null)[]): number {
+  return clamp(baseWater + cargo.filter(c => c === 'water').length * 5);
+}
 export function validCargo(s: Snapshot): boolean {
   return !!s.ship && s.cargo.length === SHIPS[s.ship].slots && s.cargo.every(Boolean) &&
     ['water', 'food', 'battery'].every(c => s.cargo.includes(c as CargoId)) && cargoMass(s) <= SHIPS[s.ship].mass;
@@ -80,7 +93,8 @@ export function actCampaign(s: Campaign, a: CampaignAction): Campaign {
     }
     case 'confirm-equipment': {
       if (s.phase !== 'equipment' || s.upgrades.filter(Boolean).length !== 3 || new Set(s.upgrades).size !== 3) return say(s, 'Completa los tres espacios con mejoras distintas.');
-      const next: Campaign = { ...s, phase: s.editingBase ? 'base' : 'ship', editingBase: false, suit: freshSuit(s), message: s.editingBase ? 'Traje preparado. Punto seguro actualizado.' : '¡Traje listo! Puedes volver a cambiarlo aquí antes de despegar.' };
+      const suit = s.editingBase ? { ...s.suit, oxygen: clamp(s.suit.oxygen, oxygenCapacity(s)), dust: 0, shield: false, magnets: false, antenna: 0 } : freshSuit(s);
+      const next: Campaign = { ...s, phase: s.editingBase ? 'base' : 'ship', editingBase: false, suit, message: s.editingBase ? 'Equipo cambiado y polvo retirado. Recarga oxígeno en Aire, herramientas en Baterías y abrigo en Calor. Punto seguro actualizado.' : '¡Traje listo! Puedes volver a cambiarlo aquí antes de despegar.' };
       return s.editingBase ? safe(next) : next;
     }
     case 'cancel-equipment':
@@ -123,25 +137,25 @@ export function actCampaign(s: Campaign, a: CampaignAction): Campaign {
     case 'land': {
       if (s.phase !== 'travel' || s.travel.leg !== 3 || !s.ship) return s;
       const base = baseAct(s.base, { type: 'start-mission' });
-      const supply = s.cargo.filter(c => c === 'water').length * 5;
-      base.reserves = { air: s.ship === 'apollo' ? 50 : 65, water: clamp(base.reserves.water + supply), thermal: s.ship === 'apollo' ? 50 : 65 };
+      base.reserves = { air: s.ship === 'apollo' ? 50 : 65, water: arrivalWater(base.reserves.water, s.cargo), thermal: s.ship === 'apollo' ? 50 : 65 };
       base.missionGoals = { recycler: false, relay: false };
-      return safe({ ...s, phase: 'base', base, suit: freshSuit(s), message: 'Base lunar: repara el reciclador y el repetidor. Alimenta seis estaciones con cuatro baterías.' });
+      return safe({ ...s, phase: 'base', base, playerDeck:1,targetDeck:1, suit: freshSuit(s), message: 'Base de cuatro pisos: lleva energía al aire, al agua y al calor. Usa la escalera para subir y bajar.' });
     }
     case 'open-lab':
       if (s.phase !== 'base' || s.excursion || s.base.solar.status === 'active' || s.base.inShelter) return say(s, 'Vuelve al interior y espera a que termine la alerta para cambiar el traje.');
       if (Object.values(s.base.reserves).some(n => n < 30)) return say(s, 'Estabiliza primero la base: aire, agua y calor deben estar al menos en 30 para crear un punto seguro en el laboratorio.');
-      return { ...safe(s), phase: 'equipment', editingBase: true, message: 'Laboratorio de mantenimiento lunar. Cambia tres mejoras y recarga tu traje.' };
+      return { ...safe(s), phase: 'equipment', editingBase: true, message: 'El laboratorio cambia mejoras y retira polvo. Para recargar, quédate junto a Aire, Baterías o Calor.' };
     case 'base-action': {
       if (s.phase !== 'base' || s.excursion || a.action.type === 'restart' || a.action.type === 'choose-shelter' || a.action.type === 'start-mission') return s;
       if (s.base.inShelter && a.action.type !== 'set-shelter-presence') return say(s, 'Durante el refugio no puedes operar estaciones.');
-      const base = baseAct(s.base, a.action); return { ...s, base };
+      const base = baseAct(s.base, a.action); return { ...s, base, message:a.action.type==='set-shelter-presence'?(a.action.inside?'Dentro del refugio. Espera a que termine la alerta.':'Ya puedes seguir trabajando en la base.'):s.message };
     }
     case 'avatar-study':
       if ((s.phase !== 'travel' && s.phase !== 'base') || s.excursion || s.base.inShelter) return s;
       return { ...s, base: { ...s.base, avatar: { ...s.base.avatar, interactionDone: true } }, message: 'Comparación AVATAR preparada. El laboratorio de la base completará el informe cuando tenga energía.' };
     case 'walk':
-      return ['equipment', 'ship', 'shelter', 'travel', 'base'].includes(s.phase) && !s.excursion && !s.base.inShelter && Number.isFinite(a.x) ? { ...s, targetX: clamp(a.x, 94) } : s;
+      if(a.deck!==undefined&&(!Number.isInteger(a.deck)||a.deck<0||a.deck>3))return s;
+      return ['equipment', 'ship', 'shelter', 'travel', 'base'].includes(s.phase) && !s.excursion && !s.base.inShelter && Number.isFinite(a.x) ? { ...s, targetX: clamp(a.x, 94),...(s.phase==='base'?{targetDeck:a.deck??Math.round(s.playerDeck??1)}:{}) } : s;
     case 'excursion': {
       if (s.phase !== 'base' || s.excursion || s.base.inShelter || s.base.solar.status === 'active' || !(a.site in SITES)) return say(s, 'No puedes salir ahora. Revisa la alerta y el refugio.');
       if (a.site === 'platform' && !has(s, 'boots')) return say(s, 'Esta tarea exige sujeción magnética sobre una placa ferromagnética. Cambia el traje en el laboratorio.');
@@ -152,7 +166,7 @@ export function actCampaign(s: Campaign, a: CampaignAction): Campaign {
     }
     case 'return-outside':
       if (s.suit.magnets) return say(s, 'Suelta los imanes de las botas antes de caminar de regreso.');
-      return s.excursion && s.excursion.stage !== 'return' ? { ...s, excursion: { ...s.excursion, stage: 'return', elapsed: 0, distance: s.excursion.stage === 'outbound' ? Math.min(s.excursion.elapsed, s.excursion.distance) : s.excursion.distance }, suit: { ...s.suit, magnets: false }, message: 'Regresando a la esclusa. Aún necesitas reservas para llegar.' } : s;
+      return s.excursion && s.excursion.stage !== 'return' ? { ...s, excursion: { ...s.excursion, stage: 'return', elapsed: 0,startX:excursionX(s), distance: s.excursion.stage === 'outbound' ? Math.min(s.excursion.elapsed, s.excursion.distance) : s.excursion.distance }, suit: { ...s.suit, magnets: false }, message: 'Regresando a la esclusa. Aún necesitas reservas para llegar.' } : s;
     case 'toggle-shield': return s.excursion && has(s, 'shield') && s.suit.energy > 0 ? { ...s, suit: { ...s.suit, shield: !s.suit.shield } } : s;
     case 'toggle-magnets': return s.excursion?.stage === 'work' && has(s, 'boots') && s.excursion.site === 'platform' ? { ...s, suit: { ...s.suit, magnets: !s.suit.magnets } } : s;
     case 'antenna': return s.excursion?.stage === 'work' && has(s, 'radio') && Number.isFinite(a.angle) ? { ...s, suit: { ...s.suit, antenna: clamp(a.angle, 180) } } : s;
@@ -186,24 +200,37 @@ export function tickCampaign(s: Campaign, deltaMs: number, direction: -1 | 0 | 1
     const elapsed = (s.flightElapsed ?? 0) + Math.min(deltaMs, 250);
     return elapsed >= 3200 ? actCampaign({ ...s, flightElapsed: 0 }, {type:'advance-flight'}) : { ...s, flightElapsed: elapsed };
   }
-  if (direction && !s.excursion && !s.base.inShelter && ['equipment','ship','shelter','travel','base'].includes(s.phase)) {
-    const speed = s.phase === 'base' ? (has(s, 'lung') ? 7 : 11) : (has(s, 'lung') ? 9 : 13);
+  if (direction && ['equipment','ship','shelter','travel'].includes(s.phase)) {
+    const speed = walkingSpeed(s);
     const playerX = clamp(s.playerX + direction * Math.min(deltaMs, 250) / 1000 * speed, 94);
     s = { ...s, playerX, targetX: playerX };
   }
   if (['equipment', 'ship', 'shelter', 'travel'].includes(s.phase)) {
     const distance = s.targetX - s.playerX;
     if (Math.abs(distance) < .01) return s;
-    const step = Math.min(deltaMs, 250) / 1000 * (has(s, 'lung') ? 15 : 20);
+    const step = Math.min(deltaMs, 250) / 1000 * walkingSpeed(s);
     return { ...s, playerX: Math.abs(distance) <= step ? s.targetX : s.playerX + Math.sign(distance) * step };
   }
   if (s.phase !== 'base') return s;
   const dt = Math.min(deltaMs, 250) / 1000;
   let base = baseTick(s.base, Math.min(deltaMs, 250));
-  const speed = has(s, 'lung') ? 7 : 11;
-  const difference = s.targetX - s.playerX;
-  const playerX = Math.abs(difference) < speed * dt ? s.targetX : s.playerX + Math.sign(difference) * speed * dt;
-  let next: Campaign = { ...s, base, playerX };
+  const speed = walkingSpeed(s)/.72;
+  let playerDeck=s.playerDeck??1;let targetDeck=s.targetDeck??playerDeck;
+  // A restored climb rests on the ladder until input. Reach a floor before
+  // allowing a horizontal step, rather than walking through the gap.
+  if(direction&&Math.abs(targetDeck-playerDeck)<.001&&Math.abs(playerDeck-Math.round(playerDeck))>.001)targetDeck=Math.round(playerDeck);
+  const climbing=Math.abs(targetDeck-playerDeck)>.001;
+  const destination=climbing?50:s.targetX;
+  const difference = destination - s.playerX;
+  let playerX=s.playerX;
+  if(!s.base.inShelter&&!s.excursion){
+    if(climbing&&Math.abs(difference)<=speed*dt){playerX=50;const step=dt*1.6;playerDeck=Math.abs(targetDeck-playerDeck)<=step?targetDeck:playerDeck+Math.sign(targetDeck-playerDeck)*step;}
+    else if(!climbing&&direction)playerX=clamp(playerX+direction*speed*dt,94);
+    else playerX=Math.abs(difference)<speed*dt?destination:playerX+Math.sign(difference)*speed*dt;
+  }
+  let next: Campaign = { ...s, base, playerX,playerDeck,targetDeck,...(!climbing&&direction?{targetX:playerX}:{}) };
+  if(base.solar.status!==s.base.solar.status)next.message=base.solar.status==='active'?'¡Alerta de partículas solares! Entra al refugio del piso cuatro.':'La alerta terminó. Puedes salir del refugio.';
+  else if(base.failure.status!==s.base.failure.status)next.message=base.failure.status==='active'?'Una batería está averiada. Reorganiza las otras para cuidar aire, agua y calor.':'La batería averiada ya está disponible otra vez.';
   if (base.outcome === 'lost') {
     const explanations = { 'reserve-zero': 'Una reserva de la base llegó a cero. Reparte energía entre aire, agua y calor.', 'solar-unprotected': 'No llegaste al refugio a tiempo. Las mejoras del traje no sustituyen el refugio solar.', timeout: 'Terminó el tiempo de operación sin completar los objetivos. Reorganiza tus prioridades.' };
     return fail(next, explanations[base.lostCause ?? 'timeout']);
@@ -211,11 +238,15 @@ export function tickCampaign(s: Campaign, deltaMs: number, direction: -1 | 0 | 1
   if (s.excursion) {
     let excursion = { ...s.excursion }; const suit = { ...s.suit };
     const difficulty = s.ship === 'apollo' ? 1.2 : 1;
-    suit.oxygen = clamp(suit.oxygen - dt * difficulty, oxygenCapacity(s));
-    suit.thermal = clamp(suit.thermal - dt * (has(s, 'armor') ? 0.3 : 1) * difficulty);
+    // Compress only the walking presentation; charge the original route cost.
+    const span=excursion.stage==='return'?Math.max(0,(excursion.startX??65)-12):53;
+    const routeRate=excursion.stage==='work'?1:span>0?excursion.distance*walkingSpeed(s)/span:0;
+    const suitDt=excursion.stage==='work'?dt:Math.min(Math.max(0,excursion.distance-excursion.elapsed),dt*routeRate);
+    suit.oxygen = clamp(suit.oxygen - suitDt * difficulty, oxygenCapacity(s));
+    suit.thermal = clamp(suit.thermal - suitDt * (has(s, 'armor') ? 0.3 : 1) * difficulty);
     const shielding = suit.shield && suit.energy > 0;
-    suit.dust = clamp(suit.dust + dt * (shielding ? -2 : 0.7) * difficulty);
-    if (shielding) suit.energy = clamp(suit.energy - dt * 1.2);
+    suit.dust = clamp(suit.dust + suitDt * (shielding ? -2 : 0.7) * difficulty);
+    if (shielding) suit.energy = clamp(suit.energy - suitDt * 1.2);
     if (suit.energy <= 0) suit.shield = false;
     if (excursion.stage === 'work' && excursion.progress > 0 && !s.repairs[excursion.site]) {
       if (excursion.site !== 'platform' || suit.magnets) {
@@ -229,10 +260,10 @@ export function tickCampaign(s: Campaign, deltaMs: number, direction: -1 | 0 | 1
         }
       }
     } else if (excursion.stage !== 'work') {
-      excursion.elapsed += dt;
+      excursion.elapsed += suitDt;
       if (excursion.elapsed >= excursion.distance) {
         if (excursion.stage === 'return') {
-          next = { ...next, excursion: null, suit: { ...suit, shield: false, magnets: false }, message: 'De vuelta en la base. El laboratorio permite recargar y cambiar mejoras.' };
+          next = { ...next, excursion: null, suit: { ...suit, shield: false, magnets: false }, message: 'De vuelta en la base. Quédate junto a Aire para oxígeno, Baterías para herramientas o Calor para abrigo. El laboratorio cambia mejoras y limpia polvo.' };
           if (suit.oxygen <= 0 || suit.thermal <= 0 || suit.dust >= 100) return fail(next, 'La salida agotó una reserva del traje antes de entrar en la base. Planea también el regreso.');
           return next;
         }
@@ -244,6 +275,17 @@ export function tickCampaign(s: Campaign, deltaMs: number, direction: -1 | 0 | 1
     if (suit.oxygen <= 0) return fail(next, 'Se agotó el oxígeno de la salida. Elige más autonomía o regresa antes: el camino de vuelta también consume.');
     if (suit.thermal <= 0) return fail(next, 'El confort térmico salió del margen del entrenamiento. Acorta la salida o prepara más aislamiento.');
     if (suit.dust >= 100) return fail(next, 'La acumulación de polvo superó el límite del entrenamiento. Usa el sistema de limpieza o regresa antes.');
+  }
+  // A full idle tick is required: arriving or holding a direction never refills.
+  if (!s.excursion && direction === 0 && Math.abs(s.targetX - s.playerX) < .001 &&
+      Math.abs((s.targetDeck ?? s.playerDeck ?? 1) - (s.playerDeck ?? 1)) < .001) {
+    const service = suitServiceStatus(next);
+    const suit = { ...next.suit };
+    for (const resource of ['oxygen', 'energy', 'thermal'] as const) {
+      if (service[resource].available && service[resource].atStation)
+        suit[resource] = clamp(suit[resource] + SUIT_SERVICE_POINTS[resource].perSecond * dt, resource === 'oxygen' ? oxygenCapacity(next) : 100);
+    }
+    next = { ...next, suit };
   }
   if (base.outcome === 'won' && !next.excursion) return safe({ ...next, phase: 'return', message: '¡Base estabilizada! La tripulación tiene agua, calor y una cosecha. Regresamos a casa.' });
   return next;
@@ -294,6 +336,8 @@ function validSnapshot(value: unknown): value is Snapshot {
   }
   const within = (n: number, min: number, max: number) => Number.isFinite(n) && n >= min && n <= max;
   if (s.flightElapsed !== undefined && !within(s.flightElapsed, 0, 3200)) return false;
+  if(s.playerDeck!==undefined&&!within(s.playerDeck,0,3))return false;
+  if(s.targetDeck!==undefined&&(!within(s.targetDeck,0,3)||!Number.isInteger(s.targetDeck)))return false;
   if (Object.values(s.base.reserves).some(n => !within(n, 0, 100))) return false;
   if (!within(s.suit.energy, 0, 100) || !within(s.suit.oxygen, 0, oxygenCapacity(s)) || !within(s.suit.thermal, 0, 100) || !within(s.suit.dust, 0, 100) || !within(s.suit.antenna, 0, 180)) return false;
   if (!within(s.playerX, 0, 94) || !within(s.targetX, 0, 94) || !Number.isInteger(s.introStep) || !within(s.introStep, 0, 3) || !Number.isInteger(s.flightStep) || !within(s.flightStep, 0, 2)) return false;

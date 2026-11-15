@@ -26,7 +26,7 @@ export const Spacecraft = memo(function Spacecraft({ship}:{ship:ShipId}) {
 
 const starPositions=Array.from({length:65},(_,i)=>({x:(i*137+29)%1000,y:(i*73+17)%500,r:i%8===0?1.7:.9}));
 export const SpaceWindow = memo(function SpaceWindow({leg=0}:{leg?:number}) {
-  return <div className={`space-view space-leg-${leg}`}><svg className="space-stars" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{starPositions.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r={p.r} fill={i%5===0?'#f8dba7':'#e6ebff'} opacity={i%3===0?.55:1}/>)}</svg><Earth/><span className="space-moon"/><span className="space-location">{leg===3?'LUNA · NUESTRO DESTINO':'TIERRA · NUESTRO HOGAR'}</span></div>;
+  return <div className={`space-view space-leg-${leg}`}><svg className="space-stars" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{starPositions.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r={p.r} fill={i%5===0?'#f8dba7':'#e6ebff'} opacity={i%3===0?.55:1}/>)}</svg><Earth/><span className="space-moon space-mars"/><span className="space-location">{leg===3?'MARTE · DESTINO DEL ENTRENAMIENTO':'TIERRA · NUESTRO HOGAR'}</span></div>;
 });
 
 function LaunchRocket({ship}:{ship:ShipId}) {
@@ -49,7 +49,7 @@ export const LaunchSequence=memo(function LaunchSequence({ship,step,paused}:{shi
     <div className="launch-smoke"><i/><i/><i/><i/></div>
     <div className="launch-vehicle">{step===2?<Spacecraft ship={ship}/>:<LaunchRocket ship={ship}/>}</div>
     {step===2&&<div className="launch-spent-stage" aria-hidden="true"/>}
-    <div className="launch-caption" role="status"><small>{['TIERRA · PLATAFORMA','ASCENSO · SEPARACIÓN','ESPACIO · RUMBO A LA LUNA'][step]}</small><strong>{captions[step]}</strong><span>{step===0?'Mira cómo nos alejamos del suelo.':step===1?'Las partes que terminan su trabajo se desprenden.':'La cápsula y su módulo de servicio siguen juntos.'}</span></div>
+    <div className="launch-caption" role="status"><small>{['TIERRA · PLATAFORMA','ASCENSO · SEPARACIÓN','ESPACIO · SIMULADOR DE VIAJE'][step]}</small><strong>{captions[step]}</strong><span>{step===0?'Mira cómo nos alejamos del suelo.':step===1?'Las partes que terminan su trabajo se desprenden.':'La cápsula y su módulo de servicio siguen juntos.'}</span></div>
     <span className="launch-note">Representación educativa · tiempo abreviado</span>
   </section>;
 });

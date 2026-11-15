@@ -38,8 +38,8 @@ export const EQUIPMENT: Record<UpgradeId, {
   boots: {
     name: 'Botas de Plomo Magnéticas', short: 'Sujeción en metal', color: '#d59cf5',
     benefit: 'Sujétate a la plataforma metálica y usa el atajo preparado.',
-    cost: 'Debes soltar los imanes para caminar. No se adhieren al suelo lunar.',
-    science: 'Los imanes atraen ciertos materiales ferromagnéticos. Esta integración de botas es una propuesta del entrenamiento, no un traje lunar operativo verificado. No controlan la gravedad.',
+    cost: 'Debes soltar los imanes para caminar. No se adhieren al suelo de Marte.',
+    science: 'Los imanes atraen ciertos materiales ferromagnéticos. Esta integración de botas es una propuesta del entrenamiento, no un traje operativo verificado. No controlan la gravedad.',
     status: 'Principio físico real · integración propuesta',
     source: 'https://www.esa.int/About_Us/EAC/Moving_on_the_Moon',
   },
