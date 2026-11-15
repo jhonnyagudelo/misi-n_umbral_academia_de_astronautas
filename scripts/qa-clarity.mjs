@@ -16,6 +16,8 @@ async function click(selector){await wait('!!document.querySelector('+JSON.strin
 async function button(text){await run('Array.from(document.querySelectorAll(\'button\')).find(b=>b.textContent.trim()==='+JSON.stringify(text)+').click()');await frames();}
 async function actualClick(selector){const point=await run('(()=>{const r=document.querySelector('+JSON.stringify(selector)+').getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2}})()');await cmd('Input.dispatchMouseEvent',{type:'mousePressed',...point,button:'left',clickCount:1});await cmd('Input.dispatchMouseEvent',{type:'mouseReleased',...point,button:'left',clickCount:1});await frames();}
 try{
+ // Legacy Spanish acceptance; bilingual defaults are covered by qa-language.mjs.
+ await cmd('Page.addScriptToEvaluateOnNewDocument',{source:"try{localStorage.setItem('mision-umbral-language','es')}catch{}"});
  await cmd('Page.enable');await cmd('Runtime.enable');
  await cmd('Page.addScriptToEvaluateOnNewDocument',{source:"window.voiceRequests=[];window.voiceCancels=0;window.audioContexts=[];const nativeSpeak=speechSynthesis.speak.bind(speechSynthesis);speechSynthesis.speak=u=>{voiceRequests.push({text:u.text,at:performance.now()});nativeSpeak(u)};const nativeCancel=speechSynthesis.cancel.bind(speechSynthesis);speechSynthesis.cancel=()=>{voiceCancels++;nativeCancel()};const Native=AudioContext;window.AudioContext=class extends Native{constructor(...args){super(...args);audioContexts.push(this)}}"});
  await cmd('Emulation.setDeviceMetricsOverride',{width:1366,height:768,deviceScaleFactor:1,mobile:false});await cmd('Page.navigate',{url:'http://127.0.0.1:4321/juego'});

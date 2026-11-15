@@ -1,6 +1,7 @@
 ﻿import {useLayoutEffect,useRef} from 'react';
 import {createNarrator,type VoicePort} from '../game/narration';
 import {spokenText} from '../content/spoken-text';
+import {getLanguage,t} from '../i18n/locale';
 
 type Announcement={text:string;priority:number;scope?:string};
 export function coalesceAnnouncement(previous:Announcement|null,next:Announcement):Announcement{
@@ -15,8 +16,8 @@ export function createBrowserVoicePort(synth:Pick<SpeechSynthesis,'speak'|'cance
   return {
     cancel(){active=undefined;speaking(false);synth.cancel();},
     speak(text,onDone){
-      const speech=new Utterance(spokenText(text));active=speech;speech.lang='es-CO';speech.rate=.9;
-      const spanish=synth.getVoices().find(v=>v.lang.startsWith('es'));if(spanish)speech.voice=spanish;
+      const language=getLanguage();const speech=new Utterance(spokenText(t(text,language)));active=speech;speech.lang=language==='en'?'en-US':'es-CO';speech.rate=.9;
+      const selected=synth.getVoices().find(v=>v.lang.startsWith(language));if(selected)speech.voice=selected;
       speech.onstart=()=>{if(active===speech)speaking(true);};
       const finish=()=>{if(active!==speech)return;active=undefined;speaking(false);onDone();};
       speech.onend=finish;speech.onerror=finish;
@@ -52,6 +53,7 @@ export function useNarration(message:string,paused:boolean,scope='scene',enabled
       voice.activate();voice.repeat();
     };
     const visibility=()=>voice.pause(settings.current.paused||document.hidden);
+    const changeLanguage=()=>voice.refresh();window.addEventListener('mission-language',changeLanguage);
     window.addEventListener('pointerup',activate);window.addEventListener('keydown',activate);
     window.addEventListener('mission-narrate',contextual);window.addEventListener('mission-repeat',repeat);
     document.addEventListener('visibilitychange',visibility);
@@ -60,6 +62,7 @@ export function useNarration(message:string,paused:boolean,scope='scene',enabled
       cancelAnimationFrame(scheduled.current);scheduled.current=0;pending.current=null;voice.dispose();narrator.current=null;
       window.removeEventListener('pointerup',activate);window.removeEventListener('keydown',activate);
       window.removeEventListener('mission-narrate',contextual);window.removeEventListener('mission-repeat',repeat);document.removeEventListener('visibilitychange',visibility);
+      window.removeEventListener('mission-language',changeLanguage);
     };
   },[]);
   useLayoutEffect(()=>{

@@ -8,21 +8,26 @@ import "../styles/habitat.css";
 import "../styles/feedback.css";
 import "../styles/clarity.css";
 import "../styles/preparation.css";
+import "../styles/language.css";
 import GameRoot from "../components/GameRoot";
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Prepara tu traje, elige tu nave y rescata una base marciana en un entrenamiento educativo de decisiones y recursos." />
+    <meta name="description" data-i18n-content-es="Prepara tu traje, elige tu nave y rescata una base marciana en un entrenamiento educativo de decisiones y recursos." content="Prepare your suit, choose your spacecraft and rescue a Mars base in an educational simulation about decisions and resources." />
     <link rel="preload" href="/fonts/pixelify-sans.ttf" as="font" type="font/ttf" crossorigin />
-    <title>Tu misión | Misión Umbral</title>
+    <title data-i18n-es="Tu misión | Misión Umbral">Your mission | Mission Umbral</title>
   </head>
 
   <body class="mission-body">
     <main><GameRoot client:load /></main>
-    <noscript>Este entrenamiento necesita JavaScript para mover tarjetas y calcular recursos. Actívalo para jugar. <a href="/">Volver a la portada</a>.</noscript>
+    <noscript>This training needs JavaScript to move cards and calculate resources. Enable it to play. <a href="/">Back to the home page</a>.</noscript>
   </body>
 </html>
+<script>
+  import { initializePublicPage } from '../i18n/public-pages';
+  initializePublicPage();
+</script>

@@ -12,6 +12,8 @@ async function wait(expression){for(let i=0;i<350;i++){if(await run(expression))
 async function shot(name){await run("document.querySelector('astro-dev-toolbar')?.remove()");const s=await cmd('Page.captureScreenshot',{format:'png'});await fs.writeFile(path.join(output,name+'.png'),Buffer.from(s.data,'base64'));}
 async function key(type,key='ArrowRight',repeat=false){await cmd('Input.dispatchKeyEvent',{type,key,code:key==='ArrowRight'?'ArrowRight':'ArrowLeft',windowsVirtualKeyCode:key==='ArrowRight'?39:37,autoRepeat:repeat});}
 try {
+ // Legacy Spanish acceptance; bilingual defaults are covered by qa-language.mjs.
+ await cmd('Page.addScriptToEvaluateOnNewDocument',{source:"try{localStorage.setItem('mision-umbral-language','es')}catch{}"});
  await cmd('Page.enable');await cmd('Runtime.enable');await cmd('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});await cmd('Emulation.setDeviceMetricsOverride',{width:1366,height:768,deviceScaleFactor:1,mobile:false});await cmd('Page.navigate',{url:'http://127.0.0.1:4321/juego'});
  await wait("!!document.querySelector('.pg-field')&&!document.querySelector('astro-island').hasAttribute('ssr')");
  await run("(async()=>{const url=performance.getEntriesByType('resource').find(e=>e.name.includes('/src/game/campaign-store.ts')).name;window.qaStore=(await import(url)).campaignStore;qaStore.dispatch({type:'restart'});for(const zone of ['hangar','travel','base','outside'])qaStore.markBriefingSeen(zone);qaStore.dispatch({type:'skip-intro'});document.querySelector('.pg-field').focus()})()");

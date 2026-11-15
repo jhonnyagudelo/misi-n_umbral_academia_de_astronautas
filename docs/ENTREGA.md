@@ -6,7 +6,7 @@ Un entrenamiento espacial para aprender a decidir: cuidar una tripulación exige
 
 ## Recorrido sugerido de demostración
 
-1. Abrir el enlace del README y explicar la meta: rescatar la base.
+1. Abrir el enlace del README: inicia en inglés y permite elegir español. Explicar la meta: rescatar la base.
 2. Mostrar una mejora del traje y su costo, y elegir tres.
 3. Elegir Artemis normal. Mostrar el bloqueo de Apolo y comparar agua de llegada frente a tiempo de refugio.
 4. Mostrar el despegue y un paso del viaje con el destino identificado.
@@ -32,7 +32,7 @@ Preparación, dos dificultades con desbloqueo, vuelo ilustrado, hábitat de cuat
 
 ## Evidencia disponible
 
-131 pruebas de dominio, progreso, voz y contenido aprobadas; TypeScript y compilación correctos. Revisión de navegador en seis formatos y revisión independiente de las reglas recientes. Evidencia local de funcionamiento, no una certificación externa.
+140 pruebas de dominio, progreso, voz y contenido aprobadas; TypeScript y compilación correctos. Revisión de navegador en seis formatos y revisión independiente de las reglas recientes. Evidencia local de funcionamiento, no una certificación externa.
 
 ## Siguientes mejoras prioritarias
 

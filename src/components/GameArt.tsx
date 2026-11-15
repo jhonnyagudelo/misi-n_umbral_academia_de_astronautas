@@ -1,3 +1,4 @@
+import Localized from './Localized';
 import type { CSSProperties } from 'react';
 import { EQUIPMENT, type UpgradeId } from '../content/equipment';
 import type { ShipId } from '../game/campaign';
@@ -19,10 +20,10 @@ const drawings: Record<string, React.ReactNode> = {
   shelter: <><path d="M3 16l13-12 13 12v14H3z" fill="#83b8c7"/><path d="M10 17h12v13H10z" fill="#28445b"/><path d="M13 20h6v3h-6z" fill="#f8d479"/></>,
 };
 export function PixelIcon({ kind, size = 40 }: { kind: string; size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 32 32" className="pixel-icon" aria-hidden="true" shapeRendering="crispEdges">{drawings[kind] ?? drawings.lab}</svg>;
+  return <Localized><svg width={size} height={size} viewBox="0 0 32 32" className="pixel-icon" aria-hidden="true" shapeRendering="crispEdges">{drawings[kind] ?? drawings.lab}</svg></Localized>;
 }
 export function Astronaut({ upgrades = [], className = '', grumpy = false }: { upgrades?: (UpgradeId | null)[]; className?: string; grumpy?: boolean }) {
-  return <div className={`astronaut ${className} ${grumpy ? 'grumpy' : ''}`}>
+  return <Localized><div className={`astronaut ${className} ${grumpy ? 'grumpy' : ''}`}>
     {upgrades.includes('lung') && <span className="suit-backpack" aria-hidden="true"/>}
     <img src="/images/astronauta-guia.png" width="128" height="160" alt={grumpy ? 'Astronauta en Modo Gruñón' : 'Astronauta con traje dorado y visor cian'} draggable="false"/>
     {['left','right'].map(side=><span key={side} className={`astronaut-leg astronaut-leg-${side}`} aria-hidden="true"><img src="/images/astronauta-guia.png" width="128" height="160" alt="" draggable="false"/></span>)}
@@ -31,13 +32,13 @@ export function Astronaut({ upgrades = [], className = '', grumpy = false }: { u
     {upgrades.includes('radio') && <span className="suit-antenna" aria-hidden="true"/>}
     {upgrades.includes('shield') && <span className="suit-electrodes" aria-hidden="true"/>}
     <div className="suit-badges" aria-label="Mejoras instaladas">{upgrades.filter((x): x is UpgradeId => !!x).map(id => <span key={id} title={EQUIPMENT[id].name} style={{ '--accent': EQUIPMENT[id].color } as CSSProperties}><PixelIcon kind={id} size={22}/></span>)}</div>
-  </div>;
+  </div></Localized>;
 }
 export function Rocket({ ship, firing = false }: { ship: ShipId; firing?: boolean }) {
-  return <svg viewBox="0 0 120 240" className={`rocket-art ${firing ? 'firing' : ''}`} role="img" aria-label={ship === 'apollo' ? 'Cohete Saturno V' : 'Cohete SLS'} shapeRendering="crispEdges">
+  return <Localized><svg viewBox="0 0 120 240" className={`rocket-art ${firing ? 'firing' : ''}`} role="img" aria-label={ship === 'apollo' ? 'Cohete Saturno V' : 'Cohete SLS'} shapeRendering="crispEdges">
     <g fill="#53798d"><path d="M7 32h7v175H7zm99 0h7v175h-7z"/><path d="M7 57h32v5H7zm73 0h33v5H80zM7 120h28v5H7zm78 0h28v5H85zM7 186h25v5H7zm81 0h25v5H88z"/></g>
     {ship === 'apollo' ? <><path d="M57 8h6v21h-6zM51 30h18l9 23H42z" fill="#d8e1e2"/><path d="M42 53h36v137H42z" fill="#e4e7df"/><path d="M42 78h36v16H42zm0 42h36v19H42zm0 45h36v17H42z" fill="#304556"/><path d="M40 190h40l10 24H30z" fill="#b8c7ca"/><path d="M38 210h10v13H38zm17 0h10v13H55zm17 0h10v13H72z" fill="#203746"/><path d="M48 58h5v14h-5zm13 0h5v14h-5z" fill="#8ea6ad"/></> : <><path d="M57 6h6v24h-6zM50 29h20l8 22H42z" fill="#e8e9db"/><path d="M46 51h28v149H46z" fill="#cb864a"/><path d="M46 66h28v9H46zm0 99h28v7H46z" fill="#e6ad66"/><path d="M26 97h12v112H26zm56 0h12v112H82z" fill="#e7e7dd"/><path d="M26 97l6-16 6 16zm56 0l6-16 6 16z" fill="#d5e4e5"/><path d="M26 135h12v7H26zm56 0h12v7H82z" fill="#4b6274"/><path d="M44 199h32l6 17H38zM24 207h16v9H24zm56 0h16v9H80z" fill="#263d4e"/></>}
     {firing && <g className="rocket-flame"><path d="M41 216h38l-7 17H48z" fill="#ef9957"/><path d="M49 216h22l-11 24z" fill="#ffe39a"/></g>}
     <path d="M15 223h90v5H15z" fill="#72b9cb"/>
-  </svg>;
+  </svg></Localized>;
 }

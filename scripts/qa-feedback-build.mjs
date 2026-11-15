@@ -11,6 +11,8 @@ async function go(label,ticks=135){await run(`document.querySelector('[aria-labe
 async function shot(name){const r=await cmd('Page.captureScreenshot',{format:'png'});await fs.writeFile(path.join(output,name+'.png'),Buffer.from(r.data,'base64'));}
 
 try{
+ // Legacy Spanish acceptance; bilingual defaults are covered by qa-language.mjs.
+ await cmd('Page.addScriptToEvaluateOnNewDocument',{source:"try{localStorage.setItem('mision-umbral-language','es')}catch{}"});
  await cmd('Page.enable');await cmd('Runtime.enable');await cmd('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
  await cmd('Page.addScriptToEvaluateOnNewDocument',{source:"window.voiceRequests=[];window.audioContexts=[];window.audioGains=[];const speak=speechSynthesis.speak.bind(speechSynthesis);speechSynthesis.speak=u=>{voiceRequests.push(u.text);speak(u)};const Native=AudioContext;window.AudioContext=class extends Native{constructor(...args){super(...args);audioContexts.push(this)}createGain(){const gain=super.createGain();audioGains.push(gain);return gain}}"});
  await cmd('Emulation.setDeviceMetricsOverride',{width:1366,height:768,deviceScaleFactor:1,mobile:false});await cmd('Page.navigate',{url:'http://127.0.0.1:4322/juego'});

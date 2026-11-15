@@ -1,3 +1,4 @@
+import Localized from './Localized';
 ﻿import {useEffect,useState} from 'react';
 import {announce} from '../hooks/useNarration';
 import {PixelIcon} from './GameArt';
@@ -12,7 +13,7 @@ export default function AvatarActivity({onComplete,done,scope='panel:avatar'}:{o
   const correct=answers.every((answer,i)=>answer===['model','flight','control'][i]);
   useEffect(()=>announce(EXPLANATION,3,scope),[scope]);
   useEffect(()=>{if(checked)announce(correct?'¡Comparación preparada! Ahora una batería en el laboratorio permitirá terminar el informe.':'Una viaja y otra queda en Tierra. Revisa la comparación y vuelve a intentarlo.',3,scope);},[checked,correct,scope]);
-  return <div className="avatar-activity">
+  return <Localized><div className="avatar-activity">
     <p className="activity-purpose"><strong>¿Para qué sirve?</strong> Investigar cómo afecta el espacio a las células, las pequeñas piezas que forman el cuerpo.</p>
     <div className="sample-comparison" aria-label="Dos muestras para comparar"><div><PixelIcon kind="lab" size={35}/><b>TIERRA</b><span>Muestra de control</span><small>Se queda aquí</small></div><span aria-hidden="true">↔</span><div><PixelIcon kind="lab" size={35}/><b>ESPACIO</b><span>Muestra de vuelo</span><small>Hace el viaje</small></div></div>
     <p className="sample-explanation">Una <strong>muestra</strong> es una pequeña porción para estudiar. Compara una que viaja con otra parecida que queda en Tierra.</p>
@@ -22,5 +23,5 @@ export default function AvatarActivity({onComplete,done,scope='panel:avatar'}:{o
     {checked&&<p role="status" className={correct?'success':'warning'}>{correct?'¡Listo! Conecta una batería al laboratorio para completar el informe.':'Recuerda: estudiamos células, una muestra viaja y la comparamos con otra en Tierra.'}</p>}
     {done&&<p className="success">✓ Comparación registrada.</p>}
     <details className="formal small-note"><summary>¿Qué hay dentro de la muestra?</summary><p>AVATAR usa modelos de tejido con células. Aquí preparas la comparación; no tomamos células del personaje ni inventamos resultados. <a href="https://science.nasa.gov/biological-physical/investigations/avatar/" target="_blank" rel="noreferrer">Fuente NASA: AVATAR ↗</a></p></details>
-  </div>;
+  </div></Localized>;
 }

@@ -6,6 +6,11 @@ function setup(){
   return {voice,spoken,done,get cancelled(){return cancelled;}};
 }
 describe('narración serial',()=>{
+  it('refresca el idioma una vez y no revive callbacks ni rompe el silencio',()=>{
+    const t=setup();t.voice.update('Una frase','base');t.voice.activate();t.voice.refresh();
+    expect(t.cancelled).toBe(1);expect(t.spoken).toHaveLength(2);t.done[0]();expect(t.spoken).toHaveLength(2);
+    t.voice.setEnabled(false);t.voice.refresh();expect(t.spoken).toHaveLength(2);
+  });
   it('termina la frase activa y conserva solo la última pista de una ráfaga',()=>{
     const t=setup();t.voice.update('Prepara el traje','hangar');t.voice.activate();
     t.voice.update('Una pista','hangar');t.voice.update('La última pista','hangar');t.voice.activate();

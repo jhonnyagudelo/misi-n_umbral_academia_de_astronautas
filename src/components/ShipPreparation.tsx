@@ -1,3 +1,4 @@
+import Localized from './Localized';
 import {useEffect,useState} from 'react';
 import {campaignStore as store} from '../game/campaign-store';
 import {SHIPS} from '../content/equipment';
@@ -27,7 +28,7 @@ export default function ShipPreparation({state:s,done}:{state:Campaign;done:()=>
     setPackages(next);
     if(next.length===2){const result=preparationPreview(s,next);announce(`Con esta combinación llegas con ${result.water} de agua. Durante la alerta debes permanecer ${result.shelterSeconds} segundos en el refugio.`,3,'panel:ship');}
   }
-  return <>
+  return <Localized><>
     <div className={`pg-ship-choices ${s.ship?'ship-chosen':''}`}>{(['apollo','orion'] as const).map(id=><button key={id} disabled={id==='apollo'&&!hardUnlocked} className={`${s.ship===id?'pg-selected':''} ${id==='apollo'&&!hardUnlocked?'ship-locked':''}`} onClick={()=>choose(id)}><Rocket ship={id}/><strong>{SHIPS[id].name}</strong><span>{id==='apollo'&&!hardUnlocked?'🔒 Difícil':SHIPS[id].difficulty}</span><small>{id==='apollo'?hardUnlocked?'Menos espacio y más consumo exterior. Genera agua con sus celdas.':'Supera primero el modo normal.':'Comienza aquí. Más espacio y paneles solares; cuida el agua.'}</small></button>)}</div>
     {s.ship&&<>
       <div className="prep-section-heading"><h3>1. Tu carga</h3><span>Peso {preview.cargoMass}/{SHIPS[s.ship].mass}</span></div>
@@ -38,8 +39,8 @@ export default function ShipPreparation({state:s,done}:{state:Campaign;done:()=>
       <div className="pg-package-choices">{(['light','supplies','reinforced'] as PackageId[]).map((id,i)=><button key={id} aria-pressed={packages.includes(id)} className={packages.includes(id)?'pg-selected':''} onClick={()=>changePackage(id)}><PixelIcon kind={i===0?'shelter':i===1?'water':'armor'} size={25}/><b>{PACKAGE_LABELS[id]}</b><small>Masa {PACKAGES[id].mass} · protección {PACKAGES[id].protection}</small></button>)}</div>
       <p className="prep-note">Más protección: menos tiempo en refugio, pero llegas con menos agua.</p>
 
-      <details className="prep-comparison"><summary>Comparar las tres combinaciones</summary><table><thead><tr><th>Paquetes</th><th>Agua</th><th>Refugio</th></tr></thead><tbody>{COMBINATIONS.map(ids=>{const result=preparationPreview(s,ids);return <tr key={ids.join()} className={ids.every(id=>packages.includes(id))?'comparison-selected':''}><td>{ids.map(id=>PACKAGE_LABELS[id]).join(' + ')}</td><td>{result.water}</td><td>{result.shelterSeconds} s</td></tr>;})}</tbody></table><small>Valores del juego, no medidas de seguridad NASA. El peso de los paquetes ocupa capacidad que podríamos dedicar al agua.</small></details>
+      <details className="prep-comparison"><summary>Comparar las tres combinaciones</summary><table><thead><tr><th>Paquetes</th><th>Agua</th><th>Refugio</th></tr></thead><tbody>{COMBINATIONS.map(ids=>{const result=preparationPreview(s,ids);return <Localized><tr key={ids.join()} className={ids.every(id=>packages.includes(id))?'comparison-selected':''}><td>{ids.map(id=>PACKAGE_LABELS[id]).join(' + ')}</td><td>{result.water}</td><td>{result.shelterSeconds} s</td></tr></Localized>;})}</tbody></table><small>Valores del juego, no medidas de seguridad NASA. El peso de los paquetes ocupa capacidad que podríamos dedicar al agua.</small></details>
       <div className="prep-actions">{packages.length===2?<div className="prep-outcome" role="status"><span>💧 Agua al llegar <strong>{preview.water}/100</strong></span><span>🛡️ Dentro del refugio <strong>{preview.shelterSeconds} s</strong></span></div>:<p className="prep-note warning">Elige dos paquetes diferentes para comparar y despegar.</p>}<button className="pixel-button primary" disabled={!validCargo(s)||packages.length!==2} onClick={()=>{perform({type:'confirm-ship'});perform({type:'shelter',ids:packages});perform({type:'launch'});done();}}>¡Despegar!</button>{!validCargo(s)&&<small className="warning">Necesitas al menos una carga de cada tipo y no superar el peso.</small>}</div>
     </>}
-  </>;
+  </></Localized>;
 }

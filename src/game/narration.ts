@@ -50,6 +50,7 @@ export function createNarrator(port:VoicePort) {
       if(!latest||!ready()||current&&key(current)===key(latest))return;
       cancel();start(latest,true);
     },
+    refresh(){if(!latest||disposed)return;cancel();start(latest,true);},
     pause(value:boolean){
       if(paused===value||disposed)return;
       paused=value;if(value){cancel();last='';}else if(latest)start(latest,true);

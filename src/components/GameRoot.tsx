@@ -1,3 +1,4 @@
+import Localized from './Localized';
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { campaignStore as store, SAVE_KEY } from '../game/campaign-store';
 import Playground from './Playground';
@@ -31,7 +32,7 @@ export default function GameRoot() {
     document.addEventListener('visibilitychange', visibility); visibility();
     return () => { window.removeEventListener('pagehide',pageHide);cancelAnimationFrame(frame); document.removeEventListener('visibilitychange', visibility); store.setDirection(0); store.setHidden(false); };
   }, []);
-  return <AudioSettingsContext.Provider value={{voiceEnabled,toggleVoice:()=>setVoiceEnabled(value=>!value),musicEnabled:music.enabled,toggleMusic:music.toggle,repeat:repeatVoice}}><div className="mission-app pg-app game-ui">
+  return <Localized><AudioSettingsContext.Provider value={{voiceEnabled,toggleVoice:()=>setVoiceEnabled(value=>!value),musicEnabled:music.enabled,toggleMusic:music.toggle,repeat:repeatVoice}}><div className="mission-app pg-app game-ui">
     <header className="mission-header"><a href="/" className="home-link" aria-label="Volver a la portada">←</a><div className="mission-brand"><span className="brand-full">MISIÓN </span>UMBRAL</div><nav aria-label="Controles"><button className="toolbar-button" onClick={()=>setModal('help')} aria-label="Abrir ayuda">?</button><AudioControls/><button className="toolbar-button" onClick={()=>{setManualPause(!view.paused);store.setPaused(!view.paused);}} aria-pressed={view.paused}>{view.paused?'Continuar':'Pausa'}</button><button className="toolbar-button" disabled={state.phase==='intro'} onClick={()=>store.saveProgress()} aria-label="Guardar progreso" title={state.phase==='intro'?'Empieza la misión para guardar':'Guardar progreso'}>💾</button><button className="toolbar-button sources-toolbar" aria-label="Fuentes científicas" onClick={()=>setModal('sources')}>ⓘ</button></nav></header>
     {view.unlockNotice&&<p className="unlock-notice" role="status">{view.unlockNotice}</p>}
     {(view.savedMessage||view.persistenceMessage)&&<p className="save-status" role="status">{view.persistenceMessage||view.savedMessage}</p>}
@@ -39,7 +40,7 @@ export default function GameRoot() {
     <Playground state={state} blocked={view.paused || view.hidden || !!modal} explain={setModal}/>
     {view.paused && !modal && manualPause && <PauseDialog resume={() => { setManualPause(false); store.setPaused(false); }}/>}
     {modal && <MissionDialog id={modal} state={state} close={() => setModal(null)}/>}
-  </div></AudioSettingsContext.Provider>;
+  </div></AudioSettingsContext.Provider></Localized>;
 }
 function PauseDialog({ resume }: { resume: () => void }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -48,5 +49,5 @@ function PauseDialog({ resume }: { resume: () => void }) {
     ref.current?.showModal();
     return () => previous?.focus();
   }, []);
-  return <dialog ref={ref} className="mission-dialog pause-dialog game-ui" aria-labelledby="pause-title" onCancel={event => { event.preventDefault(); resume(); }}><h2 id="pause-title">Misión en pausa</h2><p>Las reservas y el reloj están detenidos.</p><AudioControls/><button className="secondary-button" onClick={()=>store.saveProgress()}>Guardar progreso</button><button autoFocus className="pixel-button primary" onClick={resume}>Continuar misión</button></dialog>;
+  return <Localized><dialog ref={ref} className="mission-dialog pause-dialog game-ui" aria-labelledby="pause-title" onCancel={event => { event.preventDefault(); resume(); }}><h2 id="pause-title">Misión en pausa</h2><p>Las reservas y el reloj están detenidos.</p><AudioControls/><button className="secondary-button" onClick={()=>store.saveProgress()}>Guardar progreso</button><button autoFocus className="pixel-button primary" onClick={resume}>Continuar misión</button></dialog></Localized>;
 }

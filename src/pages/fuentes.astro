@@ -1,8 +1,45 @@
 ---
 import '../styles/global.css';
 import references from '../../data/fuentes.json';
+import { publicEnglish } from '../i18n/public-en';
 ---
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Fuentes | Misión Umbral</title></head>
-<body><main><a href="/juego">← Volver al juego</a><h1>Ciencia y reglas del entrenamiento</h1><p>El hábitat de cuatro pisos en Marte es un concepto futuro. La ilustración y los tiempos del juego no representan una nave NASA certificada ni mediciones de una misión real.</p><p>Las nuevas mecánicas del RTG, radio demorada y polvo/moho están propuestas y pendientes de revisión; las fuentes respaldan principios, no esa configuración completa.</p><ul>{references.fuentes.map(source=><li><a href={source.enlace} target="_blank" rel="noreferrer">{source.titulo}</a><p>{source.tema} · {source.organizacion} · Consulta: {source.consultado}</p></li>)}</ul><h2>Otros temas del juego</h2><p><a href="https://science.nasa.gov/biological-physical/investigations/avatar/">NASA: AVATAR y modelos de tejido</a>. Las fichas de las mejoras y sus fundamentos están también en el botón de información del juego.</p><h2>Créditos</h2><p>Felipe, Jonny Agudelo, Angela Lopez y Samantha Urbano. Desarrollo, textos y dibujos originales con asistencia de IA. Pixelify Sans: SIL OFL 1.1. Proyecto independiente, sin respaldo de NASA.</p><p>Guardado local, sin sincronización entre equipos. La alerta actual es un evento simulado; no se ha integrado un registro histórico DONKI.</p></main></body></html>
-<style>body{font:17px/1.65 system-ui,sans-serif;background:#171d2d;color:#f0ece0;margin:0;padding:clamp(20px,5vw,60px);}main{max-width:850px;margin:auto;}h1{font-size:clamp(28px,4vw,42px);line-height:1.15;color:#f2cb86;margin:30px 0 20px;}h2{font-size:23px;margin:30px 0 14px;}a{color:#9ddfe3;text-underline-offset:4px;}ul{padding-left:24px;}li{margin:18px 0;}li p{color:#b6c2ce;font-size:14px;margin:3px 0;}</style>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title data-i18n-es="Fuentes | Misión Umbral">Sources | Mission Umbral</title>
+</head>
+<body><main>
+  <nav aria-label="Page navigation">
+    <a href="/juego" data-i18n-es="← Volver al juego">← Back to the game</a>
+    <label class="language-control" data-no-translate><span>Language / Idioma</span><select data-language-select aria-label="Language / Idioma"><option value="en">English</option><option value="es">Español</option></select></label>
+  </nav>
+  <h1 data-i18n-es="Ciencia y reglas del entrenamiento">Science and training rules</h1>
+  <p data-i18n-es="El hábitat de cuatro pisos en Marte es un concepto futuro. La ilustración y los tiempos del juego no representan una nave NASA certificada ni mediciones de una misión real.">The four-story habitat on Mars is a future concept. The artwork and game timings do not represent a NASA-certified spacecraft or measurements from a real mission.</p>
+  <p data-i18n-es="Las nuevas mecánicas del RTG, radio demorada y polvo/moho están propuestas y pendientes de revisión; las fuentes respaldan principios, no esa configuración completa.">New mechanics for the RTG, delayed radio and dust/mold are proposals awaiting review; these sources support the principles, not that complete configuration.</p>
+  <ul>{references.fuentes.map(source => <li>
+    <a href={source.enlace} target="_blank" rel="noreferrer">{source.titulo}</a>
+    <p><span data-i18n-es={source.tema}>{publicEnglish[source.tema] ?? source.tema}</span> · {source.organizacion} · <span data-i18n-es="Consulta:">Accessed:</span> {source.consultado}</p>
+  </li>)}</ul>
+  <h2 data-i18n-es="Otros temas del juego">Other game topics</h2>
+  <p><a href="https://science.nasa.gov/biological-physical/investigations/avatar/" data-i18n-es="NASA: AVATAR y modelos de tejido">NASA: AVATAR and tissue models</a>. <span data-i18n-es="Las fichas de las mejoras y sus fundamentos están también en el botón de información del juego.">The upgrade cards and their scientific foundations are also available through the game’s information button.</span></p>
+  <h2 data-i18n-es="Créditos">Credits</h2>
+  <p data-i18n-es="Felipe, Jonny Agudelo, Angela Lopez y Samantha Urbano. Desarrollo, textos y dibujos originales con asistencia de IA. Pixelify Sans: SIL OFL 1.1. Proyecto independiente, sin respaldo de NASA.">Felipe, Jonny Agudelo, Angela Lopez and Samantha Urbano. Original development, text and artwork with AI assistance. Pixelify Sans: SIL OFL 1.1. An independent project, not endorsed by NASA.</p>
+  <p data-i18n-es="Guardado local, sin sincronización entre equipos. La alerta actual es un evento simulado; no se ha integrado un registro histórico DONKI.">Local saves, without synchronization between devices. The current alert is a simulated event; no historical DONKI record has been integrated.</p>
+</main></body></html>
+<script>
+  import { initializePublicPage } from '../i18n/public-pages';
+  initializePublicPage();
+</script>
+<style>
+  body{font:17px/1.65 system-ui,sans-serif;background:#171d2d;color:#f0ece0;margin:0;padding:clamp(20px,5vw,60px);}
+  main{max-width:850px;margin:auto;}
+  nav{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  .language-control{display:flex;align-items:center;gap:8px;font-size:12px;}
+  .language-control select{font:14px system-ui,sans-serif;color:#f0ece0;background:#24364a;border:1px solid #9ddfe3;padding:7px;border-radius:3px;}
+  .language-control select:focus-visible{outline:2px dashed #f2cb86;outline-offset:3px;}
+  h1{font-size:clamp(28px,4vw,42px);line-height:1.15;color:#f2cb86;margin:30px 0 20px;}
+  h2{font-size:23px;margin:30px 0 14px;}a{color:#9ddfe3;text-underline-offset:4px;}
+  ul{padding-left:24px;}li{margin:18px 0;}li p{color:#b6c2ce;font-size:14px;margin:3px 0;}
+</style>

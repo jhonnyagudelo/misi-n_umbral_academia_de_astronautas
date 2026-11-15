@@ -1,8 +1,9 @@
+import Localized from './Localized';
 import {memo} from 'react';
 
 // Original cutaway inspired by the supplied composition, not a certified NASA vehicle.
 export default memo(function HabitatBackdrop(){
-  return <svg className="habitat-drawing" viewBox="0 0 1000 800" preserveAspectRatio="none" aria-hidden="true">
+  return <Localized><svg className="habitat-drawing" viewBox="0 0 1000 800" preserveAspectRatio="none" aria-hidden="true">
     <defs><linearGradient id="habitat-metal"><stop stopColor="#a7b5ba"/><stop offset=".17" stopColor="#edf1e6"/><stop offset=".74" stopColor="#d2d5ce"/><stop offset="1" stopColor="#6a7d8d"/></linearGradient><clipPath id="habitat-hull"><path d="M280 10h440l160 177v525q0 65-135 70H255q-135-5-135-70V187z"/></clipPath><pattern id="habitat-rungs" width="30" height="16" patternUnits="userSpaceOnUse"><path d="M2 0v16m26-16v16M2 8h26" fill="none" stroke="#d3d7ca" strokeWidth="3"/></pattern></defs>
     <path d="m235 760-35 40h90l15-40m390 0 15 40h90l-35-40" fill="#65717d" stroke="#293241" strokeWidth="8"/>
     <path d="M280 10h440l160 177v525q0 65-135 70H255q-135-5-135-70V187z" fill="url(#habitat-metal)" stroke="#26394c" strokeWidth="9"/>
@@ -28,5 +29,5 @@ export default memo(function HabitatBackdrop(){
     </g>
     <path d="M310 13h380l25 24H285z" fill="#becdce" stroke="#26394c" strokeWidth="7"/>
     <g fill="none" stroke="#b9c9c8" strokeWidth="6"><path d="M825 82q60 15 40 75l-40-30z" fill="#d8dbca"/><path d="m824 82 28 41m-27 4 27-4 14 34m-14-34 14-17"/></g>
-  </svg>;
+  </svg></Localized>;
 });
