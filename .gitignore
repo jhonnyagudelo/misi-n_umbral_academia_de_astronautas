@@ -30,3 +30,17 @@ Thumbs.db
 
 # Metadatos de herramientas locales
 .atl/
+
+# Instrucciones y continuidad locales (se conservan fuera de Git)
+AGENTS.md
+CONTEXTO.md
+HISTORIAL.md
+CLAUDE.md
+GEMINI.md
+.codex/
+.claude/
+.agents/
+docs/superpowers/
+docs/Condiciones de arte y animacion - Mision Umbral.md
+docs/Direccion del juego - Mision Umbral.md
+docs/Propuesta de jugabilidad - base Jezero.md
